@@ -26,11 +26,6 @@ class TestCase extends Orchestra
             FilamentServiceProvider::class,
             \Filament\Actions\ActionsServiceProvider::class,
             \Filament\Support\SupportServiceProvider::class,
-            \Filament\Forms\FormsServiceProvider::class,
-            \Filament\Tables\TablesServiceProvider::class,
-            \Filament\Notifications\NotificationsServiceProvider::class,
-            \Filament\Infolists\InfolistsServiceProvider::class,
-            \Filament\Widgets\WidgetsServiceProvider::class,
             FilamentHelpServiceProvider::class,
         ];
     }
