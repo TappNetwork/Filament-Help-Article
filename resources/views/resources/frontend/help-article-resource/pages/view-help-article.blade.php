@@ -1,21 +1,11 @@
 <x-filament-panels::page>
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
         <div class="space-y-6">
-                @if($this->record->embed)
-                    <div class="mb-6 w-full">
-                        <div class="w-full" style="width: 100%;">
-                            @php
-                                // Try to modify Google Docs URLs to be wider
-                                $embed = $this->record->embed;
-                                if (str_contains($embed, 'docs.google.com')) {
-                                    // Add parameters to make the doc wider
-                                    $embed = str_replace('embedded=true', 'embedded=true&widget=true&chrome=false', $embed);
-                                }
-                            @endphp
-                            {!! $embed !!}
-                        </div>
-                    </div>
-                @endif
+            @if($this->record->embed)
+                <div class="mb-6">
+                    {!! $this->record->embed !!}
+                </div>
+            @endif
             
             @if($this->record->content)
                 <div class="prose max-w-none dark:prose-invert prose-headings:text-gray-900 dark:prose-headings:text-white prose-video:aspect-video">
