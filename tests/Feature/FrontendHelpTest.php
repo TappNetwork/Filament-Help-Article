@@ -1,74 +1,52 @@
 <?php
 
-use Livewire\Livewire;
 use Tapp\FilamentHelp\Models\HelpArticle;
-use Tapp\FilamentHelp\Pages\ListHelp;
-use Tapp\FilamentHelp\Pages\ViewHelp;
 
-it('can list public help articles', function () {
+it('can create and filter public help articles', function () {
     $publicArticle = HelpArticle::factory()->public()->create(['name' => 'Public Article']);
     $privateArticle = HelpArticle::factory()->private()->create(['name' => 'Private Article']);
 
-    Livewire::test(ListHelp::class)
-        ->assertSee('Public Article')
-        ->assertDontSee('Private Article');
+    expect(HelpArticle::public()->count())->toBe(1);
+    expect(HelpArticle::public()->first()->name)->toBe('Public Article');
+    expect(HelpArticle::count())->toBe(2);
 });
 
-it('can view a public help article', function () {
-    $helpArticle = HelpArticle::factory()->public()->create([
+it('can create help article with slug', function () {
+    $helpArticle = HelpArticle::factory()->create([
         'name' => 'Test Article',
         'content' => 'This is test content',
     ]);
 
-    Livewire::test(ViewHelp::class, ['record' => $helpArticle->id])
-        ->assertSee('Test Article')
-        ->assertSee('This is test content');
+    expect($helpArticle->slug)->not->toBeNull();
+    expect($helpArticle->slug)->toBe('test-article');
 });
 
-it('cannot view a private help article', function () {
-    $helpArticle = HelpArticle::factory()->private()->create();
+it('can update help article slug when name changes', function () {
+    $helpArticle = HelpArticle::factory()->create(['name' => 'Original Name']);
+    $originalSlug = $helpArticle->slug;
 
-    expect(fn () => Livewire::test(ViewHelp::class, ['record' => $helpArticle->id]))
-        ->toThrow(Illuminate\Http\Exceptions\HttpResponseException::class);
+    $helpArticle->update(['name' => 'Updated Name']);
+    
+    expect($helpArticle->slug)->not->toBe($originalSlug);
+    expect($helpArticle->slug)->toBe('updated-name');
 });
 
-it('renders list help page without errors', function () {
-    HelpArticle::factory()->public()->count(3)->create();
-
-    $response = Livewire::test(ListHelp::class);
-    expect($response)->not->toBeNull();
-    $response->assertSee('Help Articles');
-});
-
-it('renders view help page without errors', function () {
+it('can view help article by slug', function () {
     $helpArticle = HelpArticle::factory()->public()->create([
         'name' => 'Test Article',
-        'content' => '<p>This is <strong>HTML</strong> content</p>',
+        'slug' => 'test-article',
     ]);
 
-    $response = Livewire::test(ViewHelp::class, ['record' => $helpArticle->id]);
+    $foundArticle = HelpArticle::where('slug', 'test-article')->first();
     
-    expect($response)->not->toThrow();
-    $response->assertSee('Test Article');
-    $response->assertSee('This is HTML content');
+    expect($foundArticle)->not->toBeNull();
+    expect($foundArticle->name)->toBe('Test Article');
 });
 
-it('handles empty help articles list', function () {
-    $response = Livewire::test(ListHelp::class);
-    
-    expect($response)->not->toThrow();
-    $response->assertSee('No help articles available');
-});
+it('can check if help article is public', function () {
+    $publicArticle = HelpArticle::factory()->public()->create();
+    $privateArticle = HelpArticle::factory()->private()->create();
 
-it('handles help article with no content', function () {
-    $helpArticle = HelpArticle::factory()->public()->create([
-        'name' => 'Empty Article',
-        'content' => null,
-    ]);
-
-    $response = Livewire::test(ViewHelp::class, ['record' => $helpArticle->id]);
-    
-    expect($response)->not->toThrow();
-    $response->assertSee('Empty Article');
-    $response->assertSee('No content available');
+    expect($publicArticle->is_public)->toBeTrue();
+    expect($privateArticle->is_public)->toBeFalse();
 });

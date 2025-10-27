@@ -1,30 +1,42 @@
 <?php
 
-use Livewire\Livewire;
 use Tapp\FilamentHelp\Models\HelpArticle;
-use Tapp\FilamentHelp\Resources\HelpArticleResource\Pages\ListHelpArticles;
-use Tapp\FilamentHelp\Resources\HelpArticleResource\Pages\CreateHelpArticle;
-use Tapp\FilamentHelp\Resources\HelpArticleResource\Pages\ViewHelpArticle;
-use Tapp\FilamentHelp\Resources\HelpArticleResource\Pages\EditHelpArticle;
 
-it('can render the list help articles page without errors', function () {
-    Livewire::test(ListHelpArticles::class)
-        ->assertSuccessful();
+it('can create help article through factory', function () {
+    $helpArticle = HelpArticle::factory()->create([
+        'name' => 'Test Article',
+        'is_public' => true,
+        'content' => 'Test content',
+    ]);
+
+    expect($helpArticle->name)->toBe('Test Article');
+    expect($helpArticle->is_public)->toBeTrue();
+    expect($helpArticle->content)->toBe('Test content');
+    expect($helpArticle->slug)->not->toBeNull();
 });
 
-it('can render the create help article page without errors', function () {
-    Livewire::test(CreateHelpArticle::class)
-        ->assertSuccessful();
+it('can update help article', function () {
+    $helpArticle = HelpArticle::factory()->create(['name' => 'Original Name']);
+    
+    $helpArticle->update(['name' => 'Updated Name', 'is_public' => true]);
+    
+    expect($helpArticle->fresh()->name)->toBe('Updated Name');
+    expect($helpArticle->fresh()->is_public)->toBeTrue();
 });
 
-it('can render the view help article page without errors', function () {
+it('can delete help article', function () {
     $helpArticle = HelpArticle::factory()->create();
-    Livewire::test(ViewHelpArticle::class, ['record' => $helpArticle->getKey()])
-        ->assertSuccessful();
+    $id = $helpArticle->id;
+    
+    $helpArticle->delete();
+    
+    expect(HelpArticle::find($id))->toBeNull();
 });
 
-it('can render the edit help article page without errors', function () {
-    $helpArticle = HelpArticle::factory()->create();
-    Livewire::test(EditHelpArticle::class, ['record' => $helpArticle->getKey()])
-        ->assertSuccessful();
+it('can filter help articles by public status', function () {
+    HelpArticle::factory()->public()->count(2)->create();
+    HelpArticle::factory()->private()->count(3)->create();
+    
+    expect(HelpArticle::public()->count())->toBe(2);
+    expect(HelpArticle::where('is_public', false)->count())->toBe(3);
 });

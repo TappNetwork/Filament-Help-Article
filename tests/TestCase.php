@@ -25,6 +25,7 @@ class TestCase extends Orchestra
             LivewireServiceProvider::class,
             FilamentServiceProvider::class,
             \Filament\Actions\ActionsServiceProvider::class,
+            \Filament\Support\SupportServiceProvider::class,
             FilamentHelpServiceProvider::class,
         ];
     }
@@ -51,9 +52,8 @@ class TestCase extends Orchestra
             \Filament\Panel::make()
                 ->id('app')
                 ->default() // Make 'app' the default panel for frontend tests
-                ->pages([
-                    \Tapp\FilamentHelp\Pages\ListHelp::class,
-                    \Tapp\FilamentHelp\Pages\ViewHelp::class,
+                ->resources([
+                    \Tapp\FilamentHelp\Resources\Frontend\HelpArticleResource::class,
                 ])
         );
     }

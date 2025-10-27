@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('help_articles', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('slug')->unique()->nullable();
             $table->boolean('is_public')->default(false);
             $table->text('content')->nullable();
             $table->longText('embed')->nullable();

@@ -37,7 +37,7 @@ class HelpArticle extends Model
         });
 
         static::updating(function ($article) {
-            if ($article->isDirty('name') && empty($article->slug)) {
+            if ($article->isDirty('name')) {
                 $article->slug = \Str::slug($article->name);
             }
         });
