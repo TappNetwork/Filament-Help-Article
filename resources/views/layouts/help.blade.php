@@ -19,7 +19,11 @@
             }
         </style>
 
-        @filamentStyles
+        {{-- Only load Filament assets if in a Filament context (authenticated) --}}
+        @if(auth()->check() && class_exists(\Filament\Facades\Filament::class))
+            @filamentStyles
+        @endif
+        
         @vite(config('filament-help.help_layout_css', ['resources/css/app.css']))
         @if(config('filament-help.help_layout_theme_css'))
             @vite([config('filament-help.help_layout_theme_css')])
@@ -43,7 +47,11 @@
             </div>
         </div>
 
-        @filamentScripts
+        {{-- Only load Filament scripts if in a Filament context (authenticated) --}}
+        @if(auth()->check() && class_exists(\Filament\Facades\Filament::class))
+            @filamentScripts
+        @endif
+        
         @vite('resources/js/app.js')
     </body>
 </html>
