@@ -49,9 +49,9 @@ class FilamentHelpServiceProvider extends PackageServiceProvider
     {
         Route::middleware(array_merge(
             ['web'],
-            config('filament-help.public_route_middleware', [AllowPublicHelpAccess::class])
+            config('filament-help.route_middleware', [AllowPublicHelpAccess::class])
         ))
-            ->prefix(config('filament-help.public_route_prefix', 'help-articles'))
+            ->prefix(config('filament-help.route_prefix', 'help-articles'))
             ->group(function () {
                 /** @phpstan-ignore-next-line */
                 Route::get('/', [PublicHelpArticleController::class, 'index'])
