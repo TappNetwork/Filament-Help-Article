@@ -77,6 +77,8 @@ class HelpArticleResource extends Resource
 
     public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
     {
-        return parent::getEloquentQuery()->public();
+        return parent::getEloquentQuery()
+            ->public()
+            ->visible();
     }
 }

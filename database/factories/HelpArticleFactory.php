@@ -34,4 +34,11 @@ class HelpArticleFactory extends Factory
             'is_public' => false,
         ]);
     }
+
+    public function hidden(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'is_hidden' => true,
+        ]);
+    }
 }

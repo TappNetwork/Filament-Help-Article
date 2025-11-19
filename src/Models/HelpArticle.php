@@ -13,17 +13,24 @@ class HelpArticle extends Model
         'name',
         'slug',
         'is_public',
+        'is_hidden',
         'content',
         'embed',
     ];
 
     protected $casts = [
         'is_public' => 'boolean',
+        'is_hidden' => 'boolean',
     ];
 
     public function scopePublic($query)
     {
         return $query->where('is_public', true);
+    }
+
+    public function scopeVisible($query)
+    {
+        return $query->where('is_hidden', false);
     }
 
     protected static function boot()
