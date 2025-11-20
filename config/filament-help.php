@@ -20,24 +20,13 @@ return [
     |--------------------------------------------------------------------------
     |
     | CSS files to include in the help layout. This should include your
-    | Tailwind CSS file (required for styling to work).
+    | main app CSS file (Tailwind CSS required for styling).
+    |
+    | You can add multiple CSS files if needed, e.g.:
+    | 'css' => ['resources/css/app.css', 'resources/css/custom.css']
     |
     | Default: ['resources/css/app.css']
     |
     */
     'css' => ['resources/css/app.css'],
-    
-    /*
-    |--------------------------------------------------------------------------
-    | Theme CSS
-    |--------------------------------------------------------------------------
-    |
-    | Optional Filament panel theme CSS to match your app's styling.
-    | Set to your panel's theme CSS path to ensure consistent branding.
-    |
-    | Example: 'resources/css/filament/app/theme.css'
-    | Default: null
-    |
-    */
-    'theme' => null,
 ];

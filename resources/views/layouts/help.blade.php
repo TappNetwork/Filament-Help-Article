@@ -25,9 +25,6 @@
         @endif
         
         @vite(config('filament-help.css', ['resources/css/app.css']))
-        @if(config('filament-help.theme'))
-            @vite([config('filament-help.theme')])
-        @endif
     </head>
 
     <body class="font-sans text-gray-900 antialiased">
