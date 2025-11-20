@@ -64,7 +64,7 @@ class PublicHelpArticleController
             ->where('is_public', true)
             ->where('is_hidden', false)
             ->orderBy('name')
-            ->paginate(4);
+            ->paginate(8);
 
         // Allow projects to publish and customize the view
         // Check for published view first, then use package default
