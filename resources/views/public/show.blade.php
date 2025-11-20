@@ -33,11 +33,11 @@
             <div>
                 @if(Route::has('login'))
                     <a href="{{ route('login') }}" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
-                        ← Back to Login
+                        ← Back to Homepage
                     </a>
                 @else
                     <a href="/" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
-                        ← Back to Login
+                        ← Back to Homepage
                     </a>
                 @endif
             </div>
