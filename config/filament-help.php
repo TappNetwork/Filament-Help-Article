@@ -19,8 +19,8 @@ return [
     | CSS Files
     |--------------------------------------------------------------------------
     |
-    | CSS files to include in the help layout. This should include your
-    | main app CSS file (Tailwind CSS required for styling).
+    | CSS files to include in the help layout. The package CSS is always loaded
+    | first, followed by your app CSS (Tailwind required) for additional styling.
     |
     | You can add multiple CSS files if needed, e.g.:
     | 'css' => ['resources/css/app.css', 'resources/css/custom.css']

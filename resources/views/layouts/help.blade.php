@@ -24,6 +24,12 @@
             @filamentStyles
         @endif
         
+        {{-- Package CSS for help pages (prose styles, iframe styling) --}}
+        <style>
+            {!! file_get_contents(__DIR__ . '/../../css/help.css') !!}
+        </style>
+        
+        {{-- App CSS from config (Tailwind and custom styles) --}}
         @vite(config('filament-help.css', ['resources/css/app.css']))
     </head>
 
