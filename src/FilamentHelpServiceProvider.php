@@ -7,7 +7,6 @@ use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Tapp\FilamentHelp\Http\Controllers\PublicHelpArticleController;
-use Tapp\FilamentHelp\Http\Middleware\AllowPublicHelpAccess;
 
 class FilamentHelpServiceProvider extends PackageServiceProvider
 {
@@ -47,7 +46,7 @@ class FilamentHelpServiceProvider extends PackageServiceProvider
 
     protected function registerPublicRoutes(): void
     {
-        Route::middleware(['web', AllowPublicHelpAccess::class])
+        Route::middleware(['web'])
             ->prefix(config('filament-help.route_prefix', 'help-articles'))
             ->group(function () {
                 /** @phpstan-ignore-next-line */
