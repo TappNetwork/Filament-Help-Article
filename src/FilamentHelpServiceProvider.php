@@ -47,10 +47,7 @@ class FilamentHelpServiceProvider extends PackageServiceProvider
 
     protected function registerPublicRoutes(): void
     {
-        Route::middleware(array_merge(
-            ['web'],
-            config('filament-help.route_middleware', [AllowPublicHelpAccess::class])
-        ))
+        Route::middleware(['web', AllowPublicHelpAccess::class])
             ->prefix(config('filament-help.route_prefix', 'help-articles'))
             ->group(function () {
                 /** @phpstan-ignore-next-line */

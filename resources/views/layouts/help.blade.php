@@ -33,7 +33,7 @@
     <body class="font-sans text-gray-900 antialiased">
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
             <div class="mt-4 mb-4">
-                <a href="{{ config('filament-help.logo_url', '/') }}" class="block">
+                <a href="/" class="block">
                     @if(file_exists(public_path('logo.png')))
                         <img src="{{ asset('logo.png') }}" alt="{{ config('app.name') }}" class="h-16 w-auto max-w-xs">
                     @else
