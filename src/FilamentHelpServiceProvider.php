@@ -35,6 +35,10 @@ class FilamentHelpServiceProvider extends PackageServiceProvider
             __DIR__.'/../../resources/views' => resource_path('views/vendor/filament-help'),
         ], 'filament-help-views');
 
+        $this->publishes([
+            __DIR__.'/../resources/css/help.css' => public_path('vendor/filament-help/help.css'),
+        ], 'filament-help-assets');
+
         // Register the HelpLayout component so it can be used as <x-help-layout>
         /** @phpstan-ignore-next-line */
         $this->loadViewComponentsAs('', [
