@@ -27,6 +27,16 @@ class FilamentHelpServiceProvider extends PackageServiceProvider
             });
     }
 
+    public function register(): void
+    {
+        parent::register();
+        
+        // Register public routes early to ensure they take priority over Filament panel routes
+        $this->booting(function () {
+            $this->registerPublicRoutes();
+        });
+    }
+
     public function boot(): void
     {
         parent::boot();
@@ -44,8 +54,6 @@ class FilamentHelpServiceProvider extends PackageServiceProvider
         $this->loadViewComponentsAs('', [
             \Tapp\FilamentHelp\View\Components\HelpLayout::class => 'help-layout',
         ]);
-
-        $this->registerPublicRoutes();
     }
 
     protected function registerPublicRoutes(): void
