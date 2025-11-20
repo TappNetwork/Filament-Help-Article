@@ -12,9 +12,9 @@ use Tapp\FilamentHelp\Resources\Frontend\HelpArticleResource;
 class PublicHelpArticleController
 {
     /**
-     * Find the panel that has the frontend help resource registered.
+     * Find the panel that has the authenticated help resource registered.
      */
-    protected function findFrontendPanel(): ?\Filament\Panel
+    protected function findAuthenticatedPanel(): ?\Filament\Panel
     {
         foreach (Filament::getPanels() as $panel) {
             $resources = $panel->getResources();
@@ -29,11 +29,11 @@ class PublicHelpArticleController
     }
 
     /**
-     * Get the URL for the frontend help resource on the specified panel.
+     * Get the URL for the authenticated help resource in the Filament panel.
      */
-    protected function getFrontendHelpUrl(string $name, array $parameters = []): ?string
+    protected function getAuthenticatedHelpUrl(string $name, array $parameters = []): ?string
     {
-        $panel = $this->findFrontendPanel();
+        $panel = $this->findAuthenticatedPanel();
         if (! $panel) {
             return null;
         }
@@ -54,7 +54,7 @@ class PublicHelpArticleController
     {
         // If user is authenticated, redirect to the authenticated help index
         if (Auth::check()) {
-            $url = $this->getFrontendHelpUrl('index');
+            $url = $this->getAuthenticatedHelpUrl('index');
             if ($url) {
                 return redirect($url);
             }
@@ -85,7 +85,7 @@ class PublicHelpArticleController
 
         // If user is authenticated, redirect to the authenticated help page
         if (Auth::check()) {
-            $url = $this->getFrontendHelpUrl('view', ['record' => $article->slug]);
+            $url = $this->getAuthenticatedHelpUrl('view', ['record' => $article->slug]);
             if ($url) {
                 return redirect($url);
             }
