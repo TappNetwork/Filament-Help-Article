@@ -28,14 +28,6 @@ php artisan vendor:publish --tag="filament-help-migrations"
 php artisan migrate
 ```
 
-You can publish the config file with:
-
-```bash
-php artisan vendor:publish --tag="filament-help-config"
-```
-
-The config file is currently empty as all configuration is done when registering plugins.
-
 ## Using the Plugins
 
 ### Admin Plugin (for editing help articles)
