@@ -14,7 +14,7 @@ class FilamentHelpFrontendPlugin implements Plugin
         return app(static::class);
     }
 
-    public function slug(?string $slug): static
+    public function slug(string $slug): static
     {
         $this->slug = $slug;
 
@@ -28,8 +28,9 @@ class FilamentHelpFrontendPlugin implements Plugin
 
     public function register(Panel $panel): void
     {
-        // Set the slug on the resource if provided
-        $slug = $this->slug ?? config('filament-help.frontend_slug', 'help');
+        // Set the slug on the resource - use provided slug or default to 'help'
+        $defaultSlug = 'help';
+        $slug = $this->slug ?? $defaultSlug;
 
         \Tapp\FilamentHelp\Resources\Frontend\HelpArticleResource::setSlug($slug);
 

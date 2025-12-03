@@ -14,7 +14,7 @@ class FilamentHelpGuestPlugin implements Plugin
         return app(static::class);
     }
 
-    public function slug(?string $slug): static
+    public function slug(string $slug): static
     {
         $this->slug = $slug;
 
@@ -28,8 +28,9 @@ class FilamentHelpGuestPlugin implements Plugin
 
     public function register(Panel $panel): void
     {
-        // Set the slug on the resource if provided
-        $slug = $this->slug ?? config('filament-help.guest_slug', '');
+        // Set the slug on the resource - use provided slug or default to empty string (uses panel path)
+        $defaultSlug = ''; // Empty string means use panel path directly
+        $slug = $this->slug ?? $defaultSlug;
 
         \Tapp\FilamentHelp\Resources\Guest\HelpArticleResource::setSlug($slug);
 

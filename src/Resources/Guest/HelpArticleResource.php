@@ -27,16 +27,16 @@ class HelpArticleResource extends Resource
 
     protected static ?string $modelLabel = 'Help Article';
 
-    protected static ?string $slug = '';
+    protected static string $slug = '';
 
-    public static function setSlug(?string $slug): void
+    public static function setSlug(string $slug): void
     {
-        static::$slug = $slug ?? '';
+        static::$slug = $slug;
     }
 
     public static function getSlug(?\Filament\Panel $panel = null): string
     {
-        return static::$slug ?? '';
+        return static::$slug;
     }
 
     public static function table(Table $table): Table

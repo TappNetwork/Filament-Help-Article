@@ -27,9 +27,9 @@ class HelpArticleResource extends Resource
 
     protected static ?string $modelLabel = 'Help Article';
 
-    protected static ?string $slug = 'help';
+    protected static string $slug = 'help';
 
-    public static function setSlug(?string $slug): void
+    public static function setSlug(string $slug): void
     {
         static::$slug = $slug;
     }

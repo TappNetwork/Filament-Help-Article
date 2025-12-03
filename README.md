@@ -34,38 +34,7 @@ You can publish the config file with:
 php artisan vendor:publish --tag="filament-help-config"
 ```
 
-This is the contents of the published config file:
-
-```php
-return [
-    /*
-    |--------------------------------------------------------------------------
-    | Frontend Help Slug
-    |--------------------------------------------------------------------------
-    |
-    | The URL slug for authenticated user help articles in the frontend panel.
-    | This can be overridden when registering the plugin using ->slug('custom-slug').
-    |
-    | Default: 'help'
-    |
-    */
-    'frontend_slug' => env('FILAMENT_HELP_FRONTEND_SLUG', 'help'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Guest Help Slug
-    |--------------------------------------------------------------------------
-    |
-    | The URL slug for guest/public help articles in the guest panel.
-    | Set to empty string ('') to use the panel path directly.
-    | This can be overridden when registering the plugin using ->slug('custom-slug').
-    |
-    | Default: '' (empty - uses panel path)
-    |
-    */
-    'guest_slug' => env('FILAMENT_HELP_GUEST_SLUG', ''),
-];
-```
+The config file is currently empty as all configuration is done when registering plugins.
 
 ## Using the Plugins
 
@@ -112,11 +81,9 @@ public function panel(Panel $panel): Panel
 ```
 
 **Configuration Options:**
-- **Plugin method**: `->slug('custom-slug')` - Set the URL slug when registering the plugin
-- **Config file**: `filament-help.frontend_slug` - Default slug (defaults to `'help'`)
-- **Environment variable**: `FILAMENT_HELP_FRONTEND_SLUG` - Override via `.env`
+- **Plugin method**: `->slug('custom-slug')` - Set the URL slug when registering the plugin (defaults to `'help'` if not specified)
 
-**Location**: App panel (defaults to `/help`, configurable)  
+**Location**: App panel (defaults to `/help`, configurable via `->slug()`)  
 **Access**: Authenticated users only  
 **Features**: Read-only access to public help articles
 
@@ -143,15 +110,13 @@ public function panel(Panel $panel): Panel
 ```
 
 **Configuration Options:**
-- **Plugin method**: `->slug('custom-slug')` - Set the URL slug when registering the plugin
-- **Config file**: `filament-help.guest_slug` - Default slug (defaults to `''` - empty string)
-- **Environment variable**: `FILAMENT_HELP_GUEST_SLUG` - Override via `.env`
+- **Plugin method**: `->slug('custom-slug')` - Set the URL slug when registering the plugin (defaults to empty string `''` if not specified, which uses the panel path directly)
 
-**Location**: Guest panel (defaults to panel path, configurable)  
+**Location**: Guest panel (defaults to panel path, configurable via `->slug()`)  
 **Access**: Public (no authentication required)  
 **Features**: Read-only access to public help articles for guests
 
-**Note**: If you set the guest slug to an empty string (default), the help articles will be available directly at the panel path. For example, if your panel path is `help`, articles will be at `/help` and `/help/{slug}`.
+**Note**: If you don't specify a slug (or pass an empty string), the help articles will be available directly at the panel path. For example, if your panel path is `help`, articles will be at `/help` and `/help/{slug}`.
 
 ## Help Article Locations
 
@@ -161,7 +126,7 @@ Help articles are available in three different locations depending on your setup
 2. **App Panel** (configurable, default `/help`): For authenticated users to view public help articles
 3. **Guest Panel** (configurable, default uses panel path): For public/guest users to view public help articles
 
-The frontend and guest panel URLs can be customized using the plugin's `->slug()` method or via configuration (see plugin documentation above).
+The frontend and guest panel URLs can be customized using the plugin's `->slug()` method when registering the plugin (see plugin documentation above).
 
 ## Features
 
