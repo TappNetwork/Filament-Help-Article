@@ -32,6 +32,10 @@ class FilamentHelpFrontendPlugin implements Plugin
         $defaultSlug = 'help';
         $slug = $this->slug ?? $defaultSlug;
 
+        if (empty($slug)) {
+            throw new \InvalidArgumentException('Slug cannot be empty. Please provide a non-empty slug when registering the plugin.');
+        }
+
         \Tapp\FilamentHelp\Resources\Frontend\HelpArticleResource::setSlug($slug);
 
         $panel

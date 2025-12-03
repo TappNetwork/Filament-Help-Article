@@ -31,6 +31,10 @@ class HelpArticleResource extends Resource
 
     public static function setSlug(string $slug): void
     {
+        if (empty($slug)) {
+            throw new \InvalidArgumentException('Slug cannot be empty.');
+        }
+
         static::$slug = $slug;
     }
 

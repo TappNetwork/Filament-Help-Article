@@ -90,25 +90,24 @@ public function panel(Panel $panel): Panel
 {
     return $panel
         ->id('guest')
-        ->path('help') // Panel path
+        ->path('') // Panel path (empty = root, or set to your desired base path)
         // ... other panel configuration
         // Note: Do NOT add authMiddleware() for guest access
         ->plugins([
-            FilamentHelpGuestPlugin::make()
-                ->slug(''), // Optional: customize the URL slug (empty = use panel path)
-            //...
+            FilamentHelpGuestPlugin::make(),
+            // Default slug is 'help', so articles will be at /help (or {panel-path}/help)
+            // Customize with ->slug('custom-slug') if needed
         ]);
 }
 ```
 
 **Configuration Options:**
-- **Plugin method**: `->slug('custom-slug')` - Set the URL slug when registering the plugin (defaults to empty string `''` if not specified, which uses the panel path directly)
+- **Plugin method**: `->slug('custom-slug')` - Set the URL slug when registering the plugin (defaults to `'help'` if not specified)
+- **Slug requirement**: Slug must be a non-empty string
 
-**Location**: Guest panel (defaults to panel path, configurable via `->slug()`)  
+**Location**: Guest panel (defaults to `{panel-path}/help`, configurable via `->slug()`)  
 **Access**: Public (no authentication required)  
 **Features**: Read-only access to public help articles for guests
-
-**Note**: If you don't specify a slug (or pass an empty string), the help articles will be available directly at the panel path. For example, if your panel path is `help`, articles will be at `/help` and `/help/{slug}`.
 
 ## Help Article Locations
 
