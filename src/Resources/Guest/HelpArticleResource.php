@@ -1,6 +1,6 @@
 <?php
 
-namespace Tapp\FilamentHelp\Resources\Frontend;
+namespace Tapp\FilamentHelp\Resources\Guest;
 
 use Filament\Actions\ViewAction;
 use Filament\Resources\Resource;
@@ -8,8 +8,8 @@ use Filament\Support\Enums\Alignment;
 use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Table;
 use Tapp\FilamentHelp\Models\HelpArticle;
-use Tapp\FilamentHelp\Resources\Frontend\Pages\ListHelpArticles;
-use Tapp\FilamentHelp\Resources\Frontend\Pages\ViewHelpArticle;
+use Tapp\FilamentHelp\Resources\Guest\Pages\ListHelpArticles;
+use Tapp\FilamentHelp\Resources\Guest\Pages\ViewHelpArticle;
 use Tapp\FilamentHelp\Tables\Components\HelpArticleCardColumn;
 
 class HelpArticleResource extends Resource
@@ -27,11 +27,16 @@ class HelpArticleResource extends Resource
 
     protected static ?string $modelLabel = 'Help Article';
 
-    protected static ?string $slug = 'help';
+    protected static ?string $slug = '';
 
     public static function setSlug(?string $slug): void
     {
-        static::$slug = $slug;
+        static::$slug = $slug ?? '';
+    }
+
+    public static function getSlug(?\Filament\Panel $panel = null): string
+    {
+        return static::$slug ?? '';
     }
 
     public static function table(Table $table): Table

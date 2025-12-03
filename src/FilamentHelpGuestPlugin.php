@@ -5,7 +5,7 @@ namespace Tapp\FilamentHelp;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 
-class FilamentHelpFrontendPlugin implements Plugin
+class FilamentHelpGuestPlugin implements Plugin
 {
     protected ?string $slug = null;
 
@@ -23,19 +23,19 @@ class FilamentHelpFrontendPlugin implements Plugin
 
     public function getId(): string
     {
-        return 'filament-help-frontend';
+        return 'filament-help-guest';
     }
 
     public function register(Panel $panel): void
     {
         // Set the slug on the resource if provided
-        $slug = $this->slug ?? config('filament-help.frontend_slug', 'help');
+        $slug = $this->slug ?? config('filament-help.guest_slug', '');
 
-        \Tapp\FilamentHelp\Resources\Frontend\HelpArticleResource::setSlug($slug);
+        \Tapp\FilamentHelp\Resources\Guest\HelpArticleResource::setSlug($slug);
 
         $panel
             ->resources([
-                \Tapp\FilamentHelp\Resources\Frontend\HelpArticleResource::class,
+                \Tapp\FilamentHelp\Resources\Guest\HelpArticleResource::class,
             ]);
     }
 

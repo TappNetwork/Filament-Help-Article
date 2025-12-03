@@ -4,8 +4,10 @@ namespace Tapp\FilamentHelp\Resources\HelpArticleResource\Pages;
 
 use Filament\Actions;
 use Filament\Actions\Action;
+use Filament\Facades\Filament;
 use Filament\Resources\Pages\ViewRecord;
 use Tapp\FilamentHelp\Resources\Frontend\HelpArticleResource as FrontendHelpArticleResource;
+use Tapp\FilamentHelp\Resources\Guest\HelpArticleResource as GuestHelpArticleResource;
 use Tapp\FilamentHelp\Resources\HelpArticleResource;
 
 class ViewHelpArticle extends ViewRecord
@@ -24,9 +26,9 @@ class ViewHelpArticle extends ViewRecord
                 ->visible(fn () => ! $this->record->is_hidden)
                 ->action(function () {
                     $url = $this->getShareUrl();
-                    
-                    $this->js("
-                        navigator.clipboard.writeText(".json_encode($url).").then(() => {
+
+                    $this->js('
+                        navigator.clipboard.writeText('.json_encode($url).").then(() => {
                             \$tooltip('Copied to clipboard', { timeout: 2000 });
                         });
                     ");
@@ -41,8 +43,17 @@ class ViewHelpArticle extends ViewRecord
         $record = $this->record;
 
         if ($record->is_public) {
-            // Public link for unauthenticated users
-            return route('filament-help.public.show', $record->slug);
+            // Public link for unauthenticated users (guest panel)
+            $guestPanel = Filament::getPanel('guest');
+            if ($guestPanel) {
+                // Temporarily set the current panel to generate the correct URL
+                $originalPanel = Filament::getCurrentPanel();
+                Filament::setCurrentPanel($guestPanel);
+                $url = GuestHelpArticleResource::getUrl('view', ['record' => $record->slug]);
+                Filament::setCurrentPanel($originalPanel);
+
+                return $url;
+            }
         }
 
         // Authenticated frontend link (not admin)

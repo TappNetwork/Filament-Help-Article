@@ -57,9 +57,9 @@ return [
 
 ## Using the Plugins
 
-### Admin Plugin
+### Admin Plugin (for editing help articles)
 
-Add this plugin to a panel on `plugins()` method. 
+Add this plugin to your admin panel for full CRUD operations. 
 E.g. in `app/Providers/Filament/AdminPanelProvider.php`:
 
 ```php
@@ -76,9 +76,13 @@ public function panel(Panel $panel): Panel
 }
 ```
 
-### Frontend Plugin
+**Location**: Admin panel (typically `/admin/help-articles`)  
+**Access**: Authenticated admin users only  
+**Features**: Create, edit, delete, and manage all help articles
 
-Add this plugin to a panel for frontend access:
+### Frontend Plugin (for authenticated users)
+
+Add this plugin to your authenticated user panel for read-only access:
 
 ```php
 use Tapp\FilamentHelp\FilamentHelpFrontendPlugin;
@@ -88,16 +92,69 @@ public function panel(Panel $panel): Panel
     return $panel
         // ...
         ->plugins([
-            FilamentHelpFrontendPlugin::make(),
+            FilamentHelpFrontendPlugin::make()
+                ->slug('app/help'), // Optional: customize the URL slug
             //...
         ]);
 }
 ```
 
+**Configuration Options:**
+- **Plugin method**: `->slug('custom-slug')` - Set the URL slug when registering the plugin
+- **Config file**: `filament-help.frontend_slug` - Default slug (defaults to `'help'`)
+- **Environment variable**: `FILAMENT_HELP_FRONTEND_SLUG` - Override via `.env`
+
+**Location**: App panel (defaults to `/help`, configurable)  
+**Access**: Authenticated users only  
+**Features**: Read-only access to public help articles
+
+### Guest Plugin (for public access)
+
+Add this plugin to a guest panel (without authentication) for public access:
+
+```php
+use Tapp\FilamentHelp\FilamentHelpGuestPlugin;
+ 
+public function panel(Panel $panel): Panel
+{
+    return $panel
+        ->id('guest')
+        ->path('help') // Panel path
+        // ... other panel configuration
+        // Note: Do NOT add authMiddleware() for guest access
+        ->plugins([
+            FilamentHelpGuestPlugin::make()
+                ->slug(''), // Optional: customize the URL slug (empty = use panel path)
+            //...
+        ]);
+}
+```
+
+**Configuration Options:**
+- **Plugin method**: `->slug('custom-slug')` - Set the URL slug when registering the plugin
+- **Config file**: `filament-help.guest_slug` - Default slug (defaults to `''` - empty string)
+- **Environment variable**: `FILAMENT_HELP_GUEST_SLUG` - Override via `.env`
+
+**Location**: Guest panel (defaults to panel path, configurable)  
+**Access**: Public (no authentication required)  
+**Features**: Read-only access to public help articles for guests
+
+**Note**: If you set the guest slug to an empty string (default), the help articles will be available directly at the panel path. For example, if your panel path is `help`, articles will be at `/help` and `/help/{slug}`.
+
+## Help Article Locations
+
+Help articles are available in three different locations depending on your setup:
+
+1. **Admin Panel** (`/admin/help-articles`): For editing and managing help articles
+2. **App Panel** (configurable, default `/help`): For authenticated users to view public help articles
+3. **Guest Panel** (configurable, default uses panel path): For public/guest users to view public help articles
+
+The frontend and guest panel URLs can be customized using the plugin's `->slug()` method or via configuration (see plugin documentation above).
+
 ## Features
 
 - **Admin Panel**: Full CRUD operations for help articles
-- **Frontend**: Read-only access to public help articles
+- **Frontend/Guest**: Read-only access to public help articles
 - **Rich Content**: HTML content support with iframe embedding
 - **Public/Private**: Control article visibility
 - **Search & Filter**: Find articles by name and filter by public status

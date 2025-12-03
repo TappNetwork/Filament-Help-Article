@@ -3,30 +3,28 @@
 return [
     /*
     |--------------------------------------------------------------------------
-    | Public Route Prefix
+    | Frontend Help Slug
     |--------------------------------------------------------------------------
     |
-    | The URL prefix for public unauthenticated help article routes.
-    | Authenticated users are redirected to the Filament panel help resource.
+    | The URL slug for authenticated user help articles in the frontend panel.
+    | This can be overridden when registering the plugin using ->slug('custom-slug').
     |
-    | Default: 'help-articles'
+    | Default: 'help'
     |
     */
-    'route_prefix' => env('FILAMENT_HELP_ROUTE_PREFIX', 'help-articles'),
-    
+    'frontend_slug' => env('FILAMENT_HELP_FRONTEND_SLUG', 'help'),
+
     /*
     |--------------------------------------------------------------------------
-    | CSS Files
+    | Guest Help Slug
     |--------------------------------------------------------------------------
     |
-    | CSS files to include in the help layout. The package CSS is always loaded
-    | first, followed by your app CSS (Tailwind required) for additional styling.
+    | The URL slug for guest/public help articles in the guest panel.
+    | Set to empty string ('') to use the panel path directly.
+    | This can be overridden when registering the plugin using ->slug('custom-slug').
     |
-    | You can add multiple CSS files if needed, e.g.:
-    | 'css' => ['resources/css/app.css', 'resources/css/custom.css']
-    |
-    | Default: ['resources/css/app.css']
+    | Default: '' (empty - uses panel path)
     |
     */
-    'css' => ['resources/css/app.css'],
+    'guest_slug' => env('FILAMENT_HELP_GUEST_SLUG', ''),
 ];
