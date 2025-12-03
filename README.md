@@ -5,7 +5,7 @@
 ![GitHub Code Style Action Status](https://github.com/TappNetwork/filament-help/actions/workflows/fix-php-code-style-issues.yml/badge.svg)
 [![Total Downloads](https://img.shields.io/packagist/dt/tapp/filament-help.svg?style=flat-square)](https://packagist.org/packages/tapp/filament-help)
 
-This plugin adds help article management to Filament with both admin and frontend capabilities.
+This plugin adds help article management to Filament with admin, frontend, and guest panel capabilities.
 
 ## Version Compatibility
 
@@ -38,20 +38,32 @@ This is the contents of the published config file:
 
 ```php
 return [
-    'navigation' => [
-        'admin' => [
-            'register' => true,
-            'sort' => 1,
-            'icon' => 'heroicon-o-question-mark-circle',
-            'group' => 'Help',
-        ],
-        'frontend' => [
-            'register' => true,
-            'sort' => 1,
-            'icon' => 'heroicon-o-question-mark-circle',
-            'label' => 'Help',
-        ],
-    ],
+    /*
+    |--------------------------------------------------------------------------
+    | Frontend Help Slug
+    |--------------------------------------------------------------------------
+    |
+    | The URL slug for authenticated user help articles in the frontend panel.
+    | This can be overridden when registering the plugin using ->slug('custom-slug').
+    |
+    | Default: 'help'
+    |
+    */
+    'frontend_slug' => env('FILAMENT_HELP_FRONTEND_SLUG', 'help'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Guest Help Slug
+    |--------------------------------------------------------------------------
+    |
+    | The URL slug for guest/public help articles in the guest panel.
+    | Set to empty string ('') to use the panel path directly.
+    | This can be overridden when registering the plugin using ->slug('custom-slug').
+    |
+    | Default: '' (empty - uses panel path)
+    |
+    */
+    'guest_slug' => env('FILAMENT_HELP_GUEST_SLUG', ''),
 ];
 ```
 
@@ -156,8 +168,9 @@ The frontend and guest panel URLs can be customized using the plugin's `->slug()
 - **Admin Panel**: Full CRUD operations for help articles
 - **Frontend/Guest**: Read-only access to public help articles
 - **Rich Content**: HTML content support with iframe embedding
-- **Public/Private**: Control article visibility
-- **Search & Filter**: Find articles by name and filter by public status
+- **Public/Private**: Control article visibility with `is_public` flag
+- **Hidden/Draft**: Hide articles from public view with `is_hidden` flag (useful for drafts or archived articles)
+- **Search & Filter**: Find articles by name and filter by public/hidden status
 
 ## Testing
 
