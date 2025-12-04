@@ -28,8 +28,8 @@ class FilamentHelpFrontendPlugin implements Plugin
 
     public function register(Panel $panel): void
     {
-        // Set the slug on the resource - use provided slug or default to 'help'
-        $defaultSlug = 'help';
+        // Set the slug on the resource - use provided slug or default to 'help-articles'
+        $defaultSlug = 'help-articles';
         $slug = $this->slug ?? $defaultSlug;
 
         if (empty($slug)) {

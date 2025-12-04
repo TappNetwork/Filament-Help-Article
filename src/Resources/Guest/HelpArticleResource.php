@@ -27,14 +27,11 @@ class HelpArticleResource extends Resource
 
     protected static ?string $modelLabel = 'Help Article';
 
-    protected static string $slug = 'help';
+    protected static ?string $slug = 'help';
 
     public static function setSlug(string $slug): void
     {
-        if (empty($slug)) {
-            throw new \InvalidArgumentException('Slug cannot be empty.');
-        }
-
+        // Allow empty string to use panel path directly (when explicitly set)
         static::$slug = $slug;
     }
 

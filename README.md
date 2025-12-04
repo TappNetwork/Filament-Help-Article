@@ -65,17 +65,17 @@ public function panel(Panel $panel): Panel
     return $panel
         // ...
         ->plugins([
-            FilamentHelpFrontendPlugin::make()
-                ->slug('app/help'), // Optional: customize the URL slug
-            //...
+            FilamentHelpFrontendPlugin::make(),
+            // Default slug is 'help-articles', so articles will be at {panel-path}/help-articles
+            // Customize with ->slug('custom-slug') if needed
         ]);
 }
 ```
 
 **Configuration Options:**
-- **Plugin method**: `->slug('custom-slug')` - Set the URL slug when registering the plugin (defaults to `'help'` if not specified)
+- **Plugin method**: `->slug('custom-slug')` - Set the URL slug when registering the plugin (defaults to `'help-articles'` if not specified)
 
-**Location**: App panel (defaults to `/help`, configurable via `->slug()`)  
+**Location**: App panel (defaults to `{panel-path}/help-articles`, configurable via `->slug()`)  
 **Access**: Authenticated users only  
 **Features**: Read-only access to public help articles
 
@@ -114,8 +114,8 @@ public function panel(Panel $panel): Panel
 Help articles are available in three different locations depending on your setup:
 
 1. **Admin Panel** (`/admin/help-articles`): For editing and managing help articles
-2. **App Panel** (configurable, default `/help`): For authenticated users to view public help articles
-3. **Guest Panel** (configurable, default uses panel path): For public/guest users to view public help articles
+2. **App Panel** (configurable, default `{panel-path}/help-articles`): For authenticated users to view public help articles
+3. **Guest Panel** (configurable, default `{panel-path}/help`): For public/guest users to view public help articles
 
 The frontend and guest panel URLs can be customized using the plugin's `->slug()` method when registering the plugin (see plugin documentation above).
 

@@ -32,8 +32,10 @@ class FilamentHelpGuestPlugin implements Plugin
         $defaultSlug = 'help';
         $slug = $this->slug ?? $defaultSlug;
 
-        if (empty($slug)) {
-            throw new \InvalidArgumentException('Slug cannot be empty. Please provide a non-empty slug when registering the plugin.');
+        // Allow empty slug only if explicitly passed (to use panel path directly)
+        // But default must always be non-empty
+        if ($slug === $defaultSlug && empty($slug)) {
+            throw new \InvalidArgumentException('Default slug cannot be empty. Please provide a non-empty slug when registering the plugin.');
         }
 
         \Tapp\FilamentHelp\Resources\Guest\HelpArticleResource::setSlug($slug);
