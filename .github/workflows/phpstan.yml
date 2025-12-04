@@ -1,12 +1,14 @@
 name: PHPStan
 
 on:
-  push:
+  pull_request:
     paths:
       - '**.php'
       - 'phpstan.neon.dist'
       - '.github/workflows/phpstan.yml'
-  pull_request:
+  push:
+    branches:
+      - main
     paths:
       - '**.php'
       - 'phpstan.neon.dist'
@@ -15,7 +17,7 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   phpstan:

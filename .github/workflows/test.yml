@@ -1,14 +1,16 @@
 name: Test
 
 on:
-  push:
+  pull_request:
     paths:
       - '**.php'
       - '.github/workflows/test.yml'
       - 'phpunit.xml.dist'
       - 'composer.json'
       - 'composer.lock'
-  pull_request:
+  push:
+    branches:
+      - main
     paths:
       - '**.php'
       - '.github/workflows/test.yml'
@@ -19,7 +21,7 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   test:
