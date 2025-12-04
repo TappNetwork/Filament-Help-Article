@@ -11,6 +11,7 @@ on:
       - '**.php'
       - 'phpstan.neon.dist'
       - '.github/workflows/phpstan.yml'
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
