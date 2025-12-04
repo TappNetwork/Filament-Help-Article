@@ -52,5 +52,7 @@ jobs:
       - name: Install composer dependencies
         run: |
           composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+      - name: Clear Pest cache
+        run: rm -rf vendor/pestphp/pest/.temp/test-results || true
       - name: Run tests
         run: composer test
