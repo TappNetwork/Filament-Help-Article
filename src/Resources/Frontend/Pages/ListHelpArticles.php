@@ -9,7 +9,7 @@ class ListHelpArticles extends ListRecords
 {
     protected static string $resource = HelpArticleResource::class;
 
-    protected static ?string $slug = 'help';
+    // Remove static slug to use resource slug
 
     protected static ?string $title = 'Help';
 

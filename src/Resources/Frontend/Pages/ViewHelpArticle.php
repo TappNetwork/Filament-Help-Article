@@ -9,7 +9,7 @@ class ViewHelpArticle extends ViewRecord
 {
     protected static string $resource = HelpArticleResource::class;
 
-    protected static ?string $slug = 'help/{record:slug}';
+    // Remove static slug to use resource slug
 
     protected string $view = 'filament-help::resources.frontend.help-article-resource.pages.view-help-article';
 
