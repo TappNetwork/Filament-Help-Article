@@ -18,7 +18,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
   cancel-in-progress: true
 
 jobs:
@@ -54,5 +54,8 @@ jobs:
           composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
       - name: Clear Pest cache
         run: rm -rf vendor/pestphp/pest/.temp/test-results || true
+      - name: Ensure test directories exist
+        run: |
+          mkdir -p tests/Feature tests/Unit
       - name: Run tests
         run: composer test
