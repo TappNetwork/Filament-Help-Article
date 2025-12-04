@@ -20,6 +20,8 @@ class HelpArticleResource extends Resource
 
     protected static ?string $navigationLabel = 'Help';
 
+    protected static ?int $navigationSort = 999;
+
     public static function shouldRegisterNavigation(): bool
     {
         return true;

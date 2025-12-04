@@ -22,7 +22,12 @@ class HelpArticleResource extends Resource
 
     public static function shouldRegisterNavigation(): bool
     {
-        return true;
+        // Only register navigation if we're on the app panel and routes exist
+        $panel = \Filament\Facades\Filament::getCurrentPanel();
+        if ($panel && $panel->getId() === 'app') {
+            return true;
+        }
+        return false;
     }
 
     protected static ?string $modelLabel = 'Help Article';
