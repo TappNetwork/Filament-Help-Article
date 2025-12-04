@@ -48,7 +48,7 @@ class ViewHelpArticle extends ViewRecord
         return '';
     }
 
-    protected function getBreadcrumbsFromNavigation(): array
+    protected function getResourceBreadcrumbs(): array
     {
         return [];
     }
