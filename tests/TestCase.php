@@ -37,6 +37,9 @@ class TestCase extends Orchestra
 
         $migration = include __DIR__.'/../database/migrations/create_help_articles_table.php.stub';
         $migration->up();
+        
+        $addIsHiddenMigration = include __DIR__.'/../database/migrations/add_is_hidden_to_help_articles_table.php.stub';
+        $addIsHiddenMigration->up();
 
         // Set up a basic Filament panel for testing (admin)
         \Filament\Facades\Filament::registerPanel(

@@ -1,9 +1,9 @@
 <?php
 
-namespace Tapp\FilamentHelp\Resources\Frontend\Pages;
+namespace Tapp\FilamentHelp\Resources\Guest\Pages;
 
 use Filament\Resources\Pages\ListRecords;
-use Tapp\FilamentHelp\Resources\Frontend\HelpArticleResource;
+use Tapp\FilamentHelp\Resources\Guest\HelpArticleResource;
 
 class ListHelpArticles extends ListRecords
 {

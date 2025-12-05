@@ -4,11 +4,14 @@ namespace Tapp\FilamentHelp\Resources;
 
 use Filament\Forms;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
+use Illuminate\Support\Str;
 use Tapp\FilamentHelp\Models\HelpArticle;
 use Tapp\FilamentHelp\Resources\HelpArticleResource\Pages;
 
@@ -41,15 +44,26 @@ class HelpArticleResource extends Resource
             ->components([
                 Forms\Components\TextInput::make('name')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(function (Set $set, ?string $state, Get $get) {
+                        // Only auto-generate slug if it's empty (user hasn't manually set it)
+                        if (empty($get('slug'))) {
+                            $set('slug', Str::slug($state ?? ''));
+                        }
+                    }),
                 Forms\Components\TextInput::make('slug')
                     ->label('URL Slug')
                     ->helperText('Leave empty to auto-generate from name')
                     ->maxLength(255),
-                Forms\Components\Toggle::make('is_public')
-                    ->label('Public')
-                    ->default(false)
-                    ->helperText('Public articles will be displayed on the frontend.'),
+                Forms\Components\Checkbox::make('is_public')
+                    ->label('Allow public access (unauthenticated users can view)')
+                    ->helperText('When enabled, this article can be accessed via a public URL by anyone, including users who are not logged in.')
+                    ->default(false),
+                Forms\Components\Checkbox::make('is_hidden')
+                    ->label('Hidden (Draft/Archived)')
+                    ->helperText('When enabled, this article will be hidden from everyone except admins. Hidden articles are not accessible via public URL, even if public access is enabled. Use this for draft or archived articles.')
+                    ->default(false),
                     Forms\Components\Textarea::make('embed')
                         ->label('Embed (HTML)')
                         ->rows(4)
@@ -90,6 +104,9 @@ class HelpArticleResource extends Resource
                 Tables\Columns\IconColumn::make('is_public')
                     ->label('Public')
                     ->boolean(),
+                Tables\Columns\IconColumn::make('is_hidden')
+                    ->label('Hidden')
+                    ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -105,6 +122,12 @@ class HelpArticleResource extends Resource
                     ->boolean()
                     ->trueLabel('Public only')
                     ->falseLabel('Private only')
+                    ->native(false),
+                Tables\Filters\TernaryFilter::make('is_hidden')
+                    ->label('Hidden')
+                    ->boolean()
+                    ->trueLabel('Hidden only')
+                    ->falseLabel('Visible only')
                     ->native(false),
             ])
             ->actions([])

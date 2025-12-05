@@ -1,22 +1,24 @@
 <?php
 
-namespace Tapp\FilamentHelp\Resources\Frontend\Pages;
+namespace Tapp\FilamentHelp\Resources\Guest\Pages;
 
 use Filament\Resources\Pages\ViewRecord;
-use Tapp\FilamentHelp\Resources\Frontend\HelpArticleResource;
+use Tapp\FilamentHelp\Resources\Guest\HelpArticleResource;
 
 class ViewHelpArticle extends ViewRecord
 {
     protected static string $resource = HelpArticleResource::class;
 
-    protected static ?string $slug = null;
+    protected static ?string $slug = '{record:slug}';
 
-    protected string $view = 'filament-help::resources.frontend.help-article-resource.pages.view-help-article';
+    protected static bool $shouldRegisterNavigation = false;
 
-    public function mount(int | string $record): void
+    protected string $view = 'filament-help::resources.guest.help-article-resource.pages.view-help-article';
+
+    public function mount(int|string $record): void
     {
         $this->record = $this->resolveRecord($record);
-        
+
         // Ensure the article is public
         if (! $this->record->is_public) {
             abort(404);
@@ -35,7 +37,7 @@ class ViewHelpArticle extends ViewRecord
 
     public function getSubheading(): string
     {
-        return 'Last updated ' . $this->record->updated_at->format('M j, Y');
+        return 'Last updated '.$this->record->updated_at->format('M j, Y');
     }
 
     public function getBreadcrumbs(): array
@@ -46,10 +48,5 @@ class ViewHelpArticle extends ViewRecord
     public function getBreadcrumbsTitle(): string
     {
         return '';
-    }
-
-    public function getResourceBreadcrumbs(): array
-    {
-        return [];
     }
 }

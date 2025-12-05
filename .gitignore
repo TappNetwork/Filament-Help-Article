@@ -2,7 +2,7 @@
 .pest/
 
 # Composer
-/vendor/
+/vendor
 
 # IDE
 .vscode/
@@ -25,3 +25,6 @@ storage/framework/views/
 
 # Testing
 .phpunit.result.cache
+
+composer.lock
+package-lock.json

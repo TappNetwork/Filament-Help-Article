@@ -1,6 +1,6 @@
 <?php
 
-namespace Tapp\FilamentHelp\Resources\Frontend;
+namespace Tapp\FilamentHelp\Resources\Guest;
 
 use Filament\Actions\ViewAction;
 use Filament\Resources\Resource;
@@ -8,8 +8,8 @@ use Filament\Support\Enums\Alignment;
 use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Table;
 use Tapp\FilamentHelp\Models\HelpArticle;
-use Tapp\FilamentHelp\Resources\Frontend\Pages\ListHelpArticles;
-use Tapp\FilamentHelp\Resources\Frontend\Pages\ViewHelpArticle;
+use Tapp\FilamentHelp\Resources\Guest\Pages\ListHelpArticles;
+use Tapp\FilamentHelp\Resources\Guest\Pages\ViewHelpArticle;
 use Tapp\FilamentHelp\Tables\Components\HelpArticleCardColumn;
 
 class HelpArticleResource extends Resource
@@ -20,27 +20,26 @@ class HelpArticleResource extends Resource
 
     protected static ?string $navigationLabel = 'Help';
 
+    protected static ?int $navigationSort = 999;
+
     public static function shouldRegisterNavigation(): bool
     {
-        // Only register navigation if we're on the app panel and routes exist
-        $panel = \Filament\Facades\Filament::getCurrentPanel();
-        if ($panel && $panel->getId() === 'app') {
-            return true;
-        }
-        return false;
+        return true;
     }
 
     protected static ?string $modelLabel = 'Help Article';
 
-    protected static ?string $slug = 'help-articles';
+    protected static ?string $slug = 'help';
 
     public static function setSlug(string $slug): void
     {
-        if (empty($slug)) {
-            throw new \InvalidArgumentException('Slug cannot be empty.');
-        }
-
+        // Allow empty string to use panel path directly (when explicitly set)
         static::$slug = $slug;
+    }
+
+    public static function getSlug(?\Filament\Panel $panel = null): string
+    {
+        return static::$slug;
     }
 
     public static function table(Table $table): Table

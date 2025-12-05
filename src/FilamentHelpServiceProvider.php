@@ -13,9 +13,9 @@ class FilamentHelpServiceProvider extends PackageServiceProvider
         $package
             ->name('filament-help')
             ->hasViews()
-            ->hasConfigFile('filament-help')
             ->hasMigrations([
                 'create_help_articles_table',
+                'add_is_hidden_to_help_articles_table',
             ])
             ->hasInstallCommand(function (InstallCommand $command) {
                 $command
