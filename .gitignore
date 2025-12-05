@@ -2,7 +2,7 @@
 .pest/
 
 # Composer
-/vendor/
+/vendor
 
 # IDE
 .vscode/
