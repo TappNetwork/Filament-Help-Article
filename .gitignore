@@ -27,3 +27,4 @@ storage/framework/views/
 .phpunit.result.cache
 
 composer.lock
+package-lock.json
