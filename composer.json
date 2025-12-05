@@ -1,6 +1,5 @@
 {
     "name": "tapp/filament-help",
-    "version": "dev-main",
     "description": "Filament plugin for managing help articles",
     "keywords": [
         "Tapp Network",
