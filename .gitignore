@@ -25,3 +25,5 @@ storage/framework/views/
 
 # Testing
 .phpunit.result.cache
+
+composer.lock
