@@ -15,16 +15,66 @@ This plugin adds help article management to Filament with admin, frontend, and g
 
 ## Installation
 
-You can install the package via composer:
+You can install the package via Composer:
 
 ```bash
 composer require tapp/filament-help
 ```
 
-You can publish and run the migrations with:
+You can publish the config file with:
+
+```bash
+php artisan vendor:publish --tag="filament-help-config"
+```
+
+This is the contents of the published config file:
+
+```php
+return [
+    'tenancy' => [
+        // Enable or disable tenancy features globally
+        'enabled' => env('FILAMENT_HELP_TENANCY_ENABLED', false),
+        
+        // The column name for the tenant relationship
+        'column' => env('FILAMENT_HELP_TENANCY_COLUMN', 'team_id'),
+        
+        // The tenant model class
+        'model' => null,
+        
+        // The relationship name on the HelpArticle model
+        'relationship' => env('FILAMENT_HELP_TENANCY_RELATIONSHIP', 'team'),
+        
+        // Foreign key constraints
+        'foreign_key' => [
+            'on_delete' => env('FILAMENT_HELP_TENANCY_ON_DELETE', 'cascade'),
+            'on_update' => env('FILAMENT_HELP_TENANCY_ON_UPDATE', 'cascade'),
+        ],
+        
+        // Enable tenancy scoping per panel type
+        'scoping' => [
+            'admin' => env('FILAMENT_HELP_TENANCY_SCOPE_ADMIN', true),
+            'frontend' => env('FILAMENT_HELP_TENANCY_SCOPE_FRONTEND', true),
+            'guest' => env('FILAMENT_HELP_TENANCY_SCOPE_GUEST', false),
+        ],
+        
+        // Automatically assign tenant on creation
+        'auto_assign' => env('FILAMENT_HELP_TENANCY_AUTO_ASSIGN', true),
+    ],
+];
+```
+
+You can publish the migrations with:
 
 ```bash
 php artisan vendor:publish --tag="filament-help-migrations"
+```
+
+> [!WARNING]  
+> If you are using multi-tenancy please see the "Multi-Tenancy Support" instructions below **before** publishing and running migrations.
+
+You can run the migrations with:
+
+```bash
 php artisan migrate
 ```
 
@@ -67,7 +117,8 @@ public function panel(Panel $panel): Panel
         ->plugins([
             FilamentHelpFrontendPlugin::make(),
             // Default slug is 'help-articles', so articles will be at {panel-path}/help-articles
-            // Customize with ->slug('custom-slug') if needed
+            // Customize with:
+            // ->slug('custom-slug')
         ]);
 }
 ```
@@ -96,7 +147,8 @@ public function panel(Panel $panel): Panel
         ->plugins([
             FilamentHelpGuestPlugin::make(),
             // Default slug is 'help', so articles will be at /help (or {panel-path}/help)
-            // Customize with ->slug('custom-slug') if needed
+            // Customize with:
+            // ->slug('custom-slug')
         ]);
 }
 ```
@@ -127,6 +179,140 @@ The frontend and guest panel URLs can be customized using the plugin's `->slug()
 - **Public/Private**: Control article visibility with `is_public` flag
 - **Hidden/Draft**: Hide articles from public view with `is_hidden` flag (useful for drafts or archived articles)
 - **Search & Filter**: Find articles by name and filter by public/hidden status
+- **Multi-Tenancy Support**: Optionally scope help articles to teams/organizations
+
+## Multi-Tenancy Support
+
+This package supports Filament's multi-tenancy feature, allowing you to scope help articles to specific teams or organizations.
+
+### Setting Up Multi-Tenancy
+
+#### ⚠️ Important: Configure Before Migration
+
+**You MUST enable and configure tenancy BEFORE running migrations!** The migrations check the tenancy configuration to determine whether to add tenant columns to the database tables. Enabling tenancy after running migrations will require manual database modifications.
+
+1. **Enable tenancy in the config file**:
+
+Publish the config file:
+
+```bash
+php artisan vendor:publish --tag="filament-help-config"
+```
+
+Then update `config/filament-help.php`:
+
+```php
+return [
+    'tenancy' => [
+        'enabled' => true, // Enable tenancy
+        'model' => \App\Models\Team::class, // Your tenant model
+        'column' => 'team_id', // Column name in help_articles table
+        'relationship' => 'team', // Relationship name
+        
+        // Scoping per panel type
+        'scoping' => [
+            'admin' => true,     // Scope articles in admin panel
+            'frontend' => true,  // Scope articles in frontend panel
+            'guest' => false,    // Don't scope in guest panel (shared articles)
+        ],
+        
+        'auto_assign' => true, // Auto-assign current tenant to new articles
+    ],
+];
+```
+
+Or use environment variables in your `.env` file:
+
+```env
+FILAMENT_HELP_TENANCY_ENABLED=true
+FILAMENT_HELP_TENANCY_COLUMN=team_id
+FILAMENT_HELP_TENANCY_SCOPE_ADMIN=true
+FILAMENT_HELP_TENANCY_SCOPE_FRONTEND=true
+FILAMENT_HELP_TENANCY_SCOPE_GUEST=false
+```
+
+2. **Run migrations**:
+
+When tenancy is enabled, the migration will automatically add the tenant column to the `help_articles` table:
+
+```bash
+php artisan migrate
+```
+
+3. **Configure your Filament panel with tenancy**:
+
+```php
+// In your AdminPanelProvider.php (or wherever you configure your Filament panel)
+use Tapp\FilamentHelp\FilamentHelpPlugin;
+
+public function panel(Panel $panel): Panel
+{
+    return $panel
+        ->tenant(\App\Models\Team::class) // Your tenant model
+        // ... other configuration
+        ->plugins([
+            FilamentHelpPlugin::make(),
+        ]);
+}
+```
+
+### How It Works
+
+When tenancy is enabled:
+
+- **Migration**: The `team_id` column (or your custom column name) is automatically added to the `help_articles` table during migration
+- **Admin Panel**: Help articles are automatically scoped to the current tenant. Users can only see and manage articles belonging to their team.
+- **Auto-assignment**: When creating a new help article, the tenant ID is automatically assigned to the current tenant.
+- **Frontend/Guest**: You can control whether tenancy scoping applies to frontend and guest panels using the config.
+
+### Configuration Options
+
+#### Tenancy Column
+
+Change the column name if you use a different naming convention:
+
+```php
+'column' => 'organization_id',
+```
+
+#### Tenant Model
+
+Specify your tenant model:
+
+```php
+'model' => \App\Models\Organization::class,
+```
+
+#### Scoping Control
+
+Control which panels apply tenant scoping:
+
+```php
+'scoping' => [
+    'admin' => true,      // Articles scoped by tenant in admin
+    'frontend' => true,   // Articles scoped by tenant in frontend
+    'guest' => false,     // Articles shared across all tenants in guest panel
+],
+```
+
+#### Foreign Key Constraints
+
+Configure cascade behavior:
+
+```php
+'foreign_key' => [
+    'on_delete' => 'cascade', // or 'set null', 'restrict'
+    'on_update' => 'cascade', // or 'set null', 'restrict'
+],
+```
+
+### Disabling Tenancy
+
+By default, tenancy is disabled. Help articles are shared across all teams. To use this package without tenancy, simply leave the config as default or set:
+
+```env
+FILAMENT_HELP_TENANCY_ENABLED=false
+```
 
 ## Testing
 

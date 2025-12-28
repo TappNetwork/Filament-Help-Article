@@ -92,8 +92,19 @@ class HelpArticleResource extends Resource
 
     public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
     {
-        return parent::getEloquentQuery()
+        $query = parent::getEloquentQuery()
             ->public()
             ->visible();
+
+        // Apply tenant scoping if enabled
+        if (config('filament-help.tenancy.enabled', false) && config('filament-help.tenancy.scoping.guest', false)) {
+            $tenant = \Filament\Facades\Filament::getTenant();
+            if ($tenant) {
+                $tenantColumn = config('filament-help.tenancy.column') ?? 'team_id';
+                $query->where($tenantColumn, $tenant->id);
+            }
+        }
+
+        return $query;
     }
 }

@@ -12,6 +12,7 @@ class FilamentHelpServiceProvider extends PackageServiceProvider
     {
         $package
             ->name('filament-help')
+            ->hasConfigFile()
             ->hasViews()
             ->hasMigrations([
                 'create_help_articles_table',
@@ -19,6 +20,7 @@ class FilamentHelpServiceProvider extends PackageServiceProvider
             ])
             ->hasInstallCommand(function (InstallCommand $command) {
                 $command
+                    ->publishConfigFile()
                     ->publishMigrations()
                     ->askToRunMigrations();
             });

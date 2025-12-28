@@ -2,8 +2,10 @@
 
 namespace Tapp\FilamentHelp\Models;
 
+use Filament\Models\Contracts\HasTenants;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class HelpArticle extends Model
 {
@@ -17,6 +19,17 @@ class HelpArticle extends Model
         'content',
         'embed',
     ];
+
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+        
+        // Dynamically add tenant column to fillable if tenancy is enabled
+        if (config('filament-help.tenancy.enabled', false)) {
+            $tenantColumn = config('filament-help.tenancy.column') ?? 'team_id';
+            $this->fillable[] = $tenantColumn;
+        }
+    }
 
     protected $casts = [
         'is_public' => 'boolean',
@@ -33,6 +46,27 @@ class HelpArticle extends Model
         return $query->where('is_hidden', false);
     }
 
+    /**
+     * Get the team that owns this help article.
+     */
+    public function team(): BelongsTo
+    {
+        $tenantModel = config('filament-help.tenancy.model') ?? \App\Models\Team::class;
+        $tenantColumn = config('filament-help.tenancy.column') ?? 'team_id';
+        
+        return $this->belongsTo($tenantModel, $tenantColumn);
+    }
+
+    /**
+     * Scope query to only include articles for a specific tenant/team.
+     */
+    public function scopeForTenant($query, $tenant)
+    {
+        $tenantColumn = config('filament-help.tenancy.column') ?? 'team_id';
+        
+        return $query->where($tenantColumn, $tenant->id);
+    }
+
     protected static function boot()
     {
         parent::boot();
@@ -40,6 +74,18 @@ class HelpArticle extends Model
         static::creating(function ($article) {
             if (empty($article->slug)) {
                 $article->slug = \Str::slug($article->name);
+            }
+
+            // Auto-assign team_id from current Filament tenant if available and enabled
+            if (config('filament-help.tenancy.enabled', false) && config('filament-help.tenancy.auto_assign', true)) {
+                $tenantColumn = config('filament-help.tenancy.column') ?? 'team_id';
+                
+                if (empty($article->{$tenantColumn}) && class_exists(\Filament\Facades\Filament::class)) {
+                    $tenant = \Filament\Facades\Filament::getTenant();
+                    if ($tenant) {
+                        $article->{$tenantColumn} = $tenant->id;
+                    }
+                }
             }
         });
 

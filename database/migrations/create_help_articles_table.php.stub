@@ -10,6 +10,20 @@ return new class extends Migration
     {
         Schema::create('help_articles', function (Blueprint $table) {
             $table->id();
+            
+            // Add tenant column if tenancy is enabled in config
+            if (config('filament-help.tenancy.enabled', false)) {
+                $tenantColumn = config('filament-help.tenancy.column') ?? 'team_id';
+                $onDelete = config('filament-help.tenancy.foreign_key.on_delete', 'cascade');
+                $onUpdate = config('filament-help.tenancy.foreign_key.on_update', 'cascade');
+                
+                $table->foreignId($tenantColumn)
+                    ->nullable()
+                    ->constrained('teams')
+                    ->onDelete($onDelete)
+                    ->onUpdate($onUpdate);
+            }
+            
             $table->string('name');
             $table->string('slug')->unique()->nullable();
             $table->boolean('is_public')->default(false);
@@ -17,5 +31,10 @@ return new class extends Migration
             $table->longText('embed')->nullable();
             $table->timestamps();
         });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('help_articles');
     }
 };
