@@ -249,12 +249,16 @@ Extend the `HelpArticle` model in your application:
 
 ```php
 // app/Models/HelpArticle.php
+<?php
+
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Tapp\FilamentHelp\Models\HelpArticle as BaseHelpArticle;
 
-class HelpArticle extends BaseHelpArticle
+final class HelpArticle extends BaseHelpArticle
 {
     /**
      * Get the team that owns the help article.
