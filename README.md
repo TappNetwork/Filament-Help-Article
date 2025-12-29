@@ -31,6 +31,14 @@ This is the contents of the published config file:
 
 ```php
 return [
+    /*
+    | Help Article Model
+    |
+    | If you extend the HelpArticle model, specify your extended model here.
+    | This ensures Filament resources use your extended model.
+    */
+    'model' => env('FILAMENT_HELP_MODEL', \Tapp\FilamentHelp\Models\HelpArticle::class),
+
     'tenancy' => [
         // Enable or disable tenancy features globally
         'enabled' => env('FILAMENT_HELP_TENANCY_ENABLED', false),
@@ -225,13 +233,68 @@ Or use environment variables in your `.env` file:
 
 ```env
 FILAMENT_HELP_TENANCY_ENABLED=true
+FILAMENT_HELP_TENANCY_MODEL=App\Models\Team
 FILAMENT_HELP_TENANCY_COLUMN=team_id
+FILAMENT_HELP_TENANCY_RELATIONSHIP=team
 FILAMENT_HELP_TENANCY_SCOPE_ADMIN=true
 FILAMENT_HELP_TENANCY_SCOPE_FRONTEND=true
 FILAMENT_HELP_TENANCY_SCOPE_GUEST=false
 ```
 
-2. **Run migrations**:
+2. **Add the tenant relationship to your HelpArticle model**:
+
+Since the package needs to support various tenant models (Team, Organization, etc.), you need to define the relationship in your application.
+
+Extend the `HelpArticle` model in your application:
+
+```php
+// app/Models/HelpArticle.php
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Tapp\FilamentHelp\Models\HelpArticle as BaseHelpArticle;
+
+class HelpArticle extends BaseHelpArticle
+{
+    /**
+     * Get the team that owns the help article.
+     */
+    public function team(): BelongsTo
+    {
+        return $this->belongsTo(\App\Models\Team::class);
+    }
+}
+```
+
+Or if you use a different tenant model:
+
+```php
+public function organization(): BelongsTo
+{
+    return $this->belongsTo(\App\Models\Organization::class);
+}
+```
+
+**Important**: Make sure the relationship name matches the `relationship` config value you set (e.g., `'team'` or `'organization'`).
+
+Then, update your config to use your extended model:
+
+```php
+// config/filament-help.php
+return [
+    'model' => \App\Models\HelpArticle::class,
+    
+    'tenancy' => [
+        'enabled' => true,
+        'model' => \App\Models\Team::class,
+        'column' => 'team_id',
+        'relationship' => 'team',
+        // ...
+    ],
+];
+```
+
+3. **Run migrations**:
 
 When tenancy is enabled, the migration will automatically add the tenant column to the `help_articles` table:
 
@@ -239,7 +302,7 @@ When tenancy is enabled, the migration will automatically add the tenant column 
 php artisan migrate
 ```
 
-3. **Configure your Filament panel with tenancy**:
+4. **Configure your Filament panel with tenancy**:
 
 ```php
 // In your AdminPanelProvider.php (or wherever you configure your Filament panel)

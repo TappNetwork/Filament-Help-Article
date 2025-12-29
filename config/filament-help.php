@@ -4,6 +4,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Help Article Model
+    |--------------------------------------------------------------------------
+    |
+    | If you extend the HelpArticle model in your application to add custom
+    | relationships (e.g., tenant relationships), specify your extended model here.
+    | This ensures Filament resources use your extended model instead of the base model.
+    |
+    | Example: \App\Models\HelpArticle::class
+    |
+    */
+
+    'model' => \Tapp\FilamentHelp\Models\HelpArticle::class,
+
+    /*
+    |--------------------------------------------------------------------------
     | Tenancy Configuration
     |--------------------------------------------------------------------------
     |

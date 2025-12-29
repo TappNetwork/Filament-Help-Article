@@ -12,12 +12,16 @@ use Filament\Tables\Table;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Illuminate\Support\Str;
-use Tapp\FilamentHelp\Models\HelpArticle;
 use Tapp\FilamentHelp\Resources\HelpArticleResource\Pages;
 
 class HelpArticleResource extends Resource
 {
-    protected static ?string $model = HelpArticle::class;
+    protected static ?string $model = null;
+
+    public static function getModel(): string
+    {
+        return static::$model ?? config('filament-help.model', \Tapp\FilamentHelp\Models\HelpArticle::class);
+    }
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-question-mark-circle';
 

@@ -2,10 +2,8 @@
 
 namespace Tapp\FilamentHelp\Models;
 
-use Filament\Models\Contracts\HasTenants;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class HelpArticle extends Model
 {
@@ -47,25 +45,36 @@ class HelpArticle extends Model
     }
 
     /**
-     * Get the team that owns this help article.
-     */
-    public function team(): BelongsTo
-    {
-        $tenantModel = config('filament-help.tenancy.model') ?? \App\Models\Team::class;
-        $tenantColumn = config('filament-help.tenancy.column') ?? 'team_id';
-        
-        return $this->belongsTo($tenantModel, $tenantColumn);
-    }
-
-    /**
      * Scope query to only include articles for a specific tenant/team.
      */
     public function scopeForTenant($query, $tenant)
     {
+        if (! config('filament-help.tenancy.enabled', false)) {
+            return $query;
+        }
+        
         $tenantColumn = config('filament-help.tenancy.column') ?? 'team_id';
         
         return $query->where($tenantColumn, $tenant->id);
     }
+
+    /**
+     * Define your tenant relationship here.
+     * 
+     * Example for Team:
+     * 
+     * public function team(): BelongsTo
+     * {
+     *     return $this->belongsTo(\App\Models\Team::class);
+     * }
+     * 
+     * Or for Organization:
+     * 
+     * public function organization(): BelongsTo
+     * {
+     *     return $this->belongsTo(\App\Models\Organization::class);
+     * }
+     */
 
     protected static function boot()
     {
