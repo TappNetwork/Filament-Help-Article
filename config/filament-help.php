@@ -71,7 +71,7 @@ return [
         'scoping' => [
             'admin' => env('FILAMENT_HELP_TENANCY_SCOPE_ADMIN', true),
             'frontend' => env('FILAMENT_HELP_TENANCY_SCOPE_FRONTEND', true),
-            'guest' => env('FILAMENT_HELP_TENANCY_SCOPE_GUEST', false),
+            'guest' => env('FILAMENT_HELP_TENANCY_SCOPE_GUEST', true),
         ],
 
         /*
