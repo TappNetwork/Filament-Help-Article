@@ -12,14 +12,27 @@ use Filament\Tables\Table;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Illuminate\Support\Str;
-use Tapp\FilamentHelp\Models\HelpArticle;
 use Tapp\FilamentHelp\Resources\HelpArticleResource\Pages;
 
 class HelpArticleResource extends Resource
 {
-    protected static ?string $model = HelpArticle::class;
+    protected static ?string $model = null;
+
+    public static function getModel(): string
+    {
+        return static::$model ?? config('filament-help.model', \Tapp\FilamentHelp\Models\HelpArticle::class);
+    }
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-question-mark-circle';
+
+    public static function getTenantOwnershipRelationshipName(): string
+    {
+        if (config('filament-help.tenancy.enabled', false)) {
+            return config('filament-help.tenancy.relationship') ?? 'team';
+        }
+        
+        return parent::getTenantOwnershipRelationshipName();
+    }
 
     public static string|\UnitEnum|null $navigationGroup = 'System';
 
@@ -149,5 +162,21 @@ class HelpArticleResource extends Resource
             'view' => Pages\ViewHelpArticle::route('/{record}'),
             'edit' => Pages\EditHelpArticle::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        // Apply tenant scoping if tenancy is enabled
+        if (config('filament-help.tenancy.enabled', false) && config('filament-help.tenancy.scoping.admin', true)) {
+            $tenant = \Filament\Facades\Filament::getTenant();
+            if ($tenant) {
+                $tenantColumn = config('filament-help.tenancy.column') ?? 'team_id';
+                $query->where($tenantColumn, $tenant->id);
+            }
+        }
+
+        return $query;
     }
 }
