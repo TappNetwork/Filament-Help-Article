@@ -1,8 +1,8 @@
 # Filament plugin for managing help articles
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/tapp/filament-help.svg?style=flat-square)](https://packagist.org/packages/tapp/filament-help)
-![GitHub Tests Action Status](https://github.com/TappNetwork/filament-help/actions/workflows/run-tests.yml/badge.svg)
-![GitHub Code Style Action Status](https://github.com/TappNetwork/filament-help/actions/workflows/fix-php-code-style-issues.yml/badge.svg)
+![GitHub Tests Action Status](https://github.com/TappNetwork/Filament-Help-Article/actions/workflows/test.yml/badge.svg)
+![GitHub Code Style Action Status](https://github.com/TappNetwork/Filament-Help-Article/actions/workflows/pint.yml/badge.svg)
 [![Total Downloads](https://img.shields.io/packagist/dt/tapp/filament-help.svg?style=flat-square)](https://packagist.org/packages/tapp/filament-help)
 
 This plugin adds help article management to Filament with admin, frontend, and guest panel capabilities.
@@ -11,7 +11,7 @@ This plugin adds help article management to Filament with admin, frontend, and g
 
  Filament | Filament Help
 :---------|:---------------------------
- 4.x      | 1.x
+ 4.x/5.x  | 1.x
 
 ## Installation
 
