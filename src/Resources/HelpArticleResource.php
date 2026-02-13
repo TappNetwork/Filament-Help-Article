@@ -2,12 +2,16 @@
 
 namespace Tapp\FilamentHelp\Resources;
 
+use Filament\Actions\ActionGroup;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Tables;
+use Filament\Tables\Enums\RecordActionsPosition;
 use Filament\Tables\Table;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
@@ -143,7 +147,12 @@ class HelpArticleResource extends Resource
                     ->falseLabel('Visible only')
                     ->native(false),
             ])
-            ->actions([])
+            ->recordActions([
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make(),
+                ]),
+            ], position: RecordActionsPosition::BeforeColumns)
             ->bulkActions([]);
     }
 
