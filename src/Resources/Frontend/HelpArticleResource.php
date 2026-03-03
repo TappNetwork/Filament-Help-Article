@@ -3,6 +3,7 @@
 namespace Tapp\FilamentHelp\Resources\Frontend;
 
 use Filament\Actions\ViewAction;
+use Filament\Facades\Filament;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\Alignment;
 use Filament\Tables\Columns\Layout\Stack;
@@ -26,12 +27,13 @@ class HelpArticleResource extends Resource
 
     public static function shouldRegisterNavigation(): bool
     {
-        // Only register navigation if we're on the app panel and routes exist
-        $panel = \Filament\Facades\Filament::getCurrentPanel();
-        if ($panel && $panel->getId() === 'app') {
-            return true;
+        if (! config('filament-help.frontend.resource.should_register_navigation', true)) {
+            return false;
         }
-        return false;
+
+        $panel = Filament::getCurrentPanel();
+
+        return $panel && $panel->getId() === 'app';
     }
 
     protected static ?string $modelLabel = 'Help Article';
@@ -103,7 +105,7 @@ class HelpArticleResource extends Resource
 
         // Apply tenant scoping if enabled
         if (config('filament-help.tenancy.enabled', false) && config('filament-help.tenancy.scoping.frontend', true)) {
-            $tenant = \Filament\Facades\Filament::getTenant();
+            $tenant = Filament::getTenant();
             if ($tenant) {
                 $tenantColumn = config('filament-help.tenancy.column') ?? 'team_id';
                 $query->where($tenantColumn, $tenant->id);

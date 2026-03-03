@@ -19,6 +19,25 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Frontend Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Configure the frontend help article resource behaviour.
+    |
+    */
+
+    'frontend' => [
+        'resource' => [
+            /*
+             * Whether the frontend Help resource appears in the panel navigation.
+             * Set to false to hide from the topbar and use a custom link (e.g. in the user menu) instead.
+             */
+            'should_register_navigation' => true,
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Tenancy Configuration
     |--------------------------------------------------------------------------
     |
