@@ -5,6 +5,7 @@ namespace Tapp\FilamentHelp\Resources;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Utilities\Get;
@@ -13,10 +14,11 @@ use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Enums\RecordActionsPosition;
 use Filament\Tables\Table;
-use Filament\Tables\Actions\BulkActionGroup;
-use Filament\Tables\Actions\DeleteBulkAction;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
+use Tapp\FilamentHelp\Models\HelpArticle;
 use Tapp\FilamentHelp\Resources\HelpArticleResource\Pages;
+use Tapp\FilamentHelp\Support\Tenancy;
 
 class HelpArticleResource extends Resource
 {
@@ -24,17 +26,17 @@ class HelpArticleResource extends Resource
 
     public static function getModel(): string
     {
-        return static::$model ?? config('filament-help.model', \Tapp\FilamentHelp\Models\HelpArticle::class);
+        return static::$model ?? config('filament-help.model', HelpArticle::class);
     }
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-question-mark-circle';
 
     public static function getTenantOwnershipRelationshipName(): string
     {
-        if (config('filament-help.tenancy.enabled', false)) {
+        if (Tenancy::isEnabled()) {
             return config('filament-help.tenancy.relationship') ?? 'team';
         }
-        
+
         return parent::getTenantOwnershipRelationshipName();
     }
 
@@ -81,11 +83,11 @@ class HelpArticleResource extends Resource
                     ->label('Hidden (Draft/Archived)')
                     ->helperText('When enabled, this article will be hidden from everyone except admins. Hidden articles are not accessible via public URL, even if public access is enabled. Use this for draft or archived articles.')
                     ->default(false),
-                    Forms\Components\Textarea::make('embed')
-                        ->label('Embed (HTML)')
-                        ->rows(4)
-                        ->helperText('Some embed tags contain style rules that may need to be removed or edited to render properly.')
-                        ->columnSpanFull(),
+                Forms\Components\Textarea::make('embed')
+                    ->label('Embed (HTML)')
+                    ->rows(4)
+                    ->helperText('Some embed tags contain style rules that may need to be removed or edited to render properly.')
+                    ->columnSpanFull(),
                 Forms\Components\RichEditor::make('content')
                     ->label('Content')
                     ->toolbarButtons([
@@ -106,7 +108,7 @@ class HelpArticleResource extends Resource
                         'attachFiles',
                     ])
                     ->extraInputAttributes([
-                        'style' => 'min-height: 200px;'
+                        'style' => 'min-height: 200px;',
                     ]),
             ]);
     }
@@ -173,16 +175,15 @@ class HelpArticleResource extends Resource
         ];
     }
 
-    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery();
 
         // Apply tenant scoping if tenancy is enabled
-        if (config('filament-help.tenancy.enabled', false) && config('filament-help.tenancy.scoping.admin', true)) {
-            $tenant = \Filament\Facades\Filament::getTenant();
+        if (Tenancy::hasTenantColumn(static::getModel()) && config('filament-help.tenancy.scoping.admin', true)) {
+            $tenant = Filament::getTenant();
             if ($tenant) {
-                $tenantColumn = config('filament-help.tenancy.column') ?? 'team_id';
-                $query->where($tenantColumn, $tenant->id);
+                $query->where(Tenancy::column(), $tenant->id);
             }
         }
 
