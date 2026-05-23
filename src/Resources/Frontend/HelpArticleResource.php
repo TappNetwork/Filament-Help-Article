@@ -8,8 +8,11 @@ use Filament\Resources\Resource;
 use Filament\Support\Enums\Alignment;
 use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Tapp\FilamentHelp\Models\HelpArticle;
 use Tapp\FilamentHelp\Resources\Frontend\Pages\ListHelpArticles;
 use Tapp\FilamentHelp\Resources\Frontend\Pages\ViewHelpArticle;
+use Tapp\FilamentHelp\Support\Tenancy;
 use Tapp\FilamentHelp\Tables\Components\HelpArticleCardColumn;
 
 class HelpArticleResource extends Resource
@@ -18,7 +21,7 @@ class HelpArticleResource extends Resource
 
     public static function getModel(): string
     {
-        return static::$model ?? config('filament-help.model', \Tapp\FilamentHelp\Models\HelpArticle::class);
+        return static::$model ?? config('filament-help.model', HelpArticle::class);
     }
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-question-mark-circle';
@@ -97,18 +100,17 @@ class HelpArticleResource extends Resource
         return false;
     }
 
-    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery()
             ->public()
             ->visible();
 
         // Apply tenant scoping if enabled
-        if (config('filament-help.tenancy.enabled', false) && config('filament-help.tenancy.scoping.frontend', true)) {
+        if (Tenancy::hasTenantColumn(static::getModel()) && config('filament-help.tenancy.scoping.frontend', true)) {
             $tenant = Filament::getTenant();
             if ($tenant) {
-                $tenantColumn = config('filament-help.tenancy.column') ?? 'team_id';
-                $query->where($tenantColumn, $tenant->id);
+                $query->where(Tenancy::column(), $tenant->id);
             }
         }
 
