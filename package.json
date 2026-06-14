@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "esbuild": "^0.25.11"
+    "esbuild": "0.28.1"
   },
   "dependencies": {
     "@tiptap/core": "^3.8.0",
