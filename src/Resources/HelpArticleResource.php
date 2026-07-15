@@ -24,6 +24,8 @@ class HelpArticleResource extends Resource
 {
     protected static ?string $model = null;
 
+    protected static ?string $recordTitleAttribute = 'name';
+
     public static function getModel(): string
     {
         return static::$model ?? config('filament-help.model', HelpArticle::class);

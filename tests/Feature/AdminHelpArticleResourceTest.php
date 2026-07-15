@@ -44,6 +44,18 @@ it('can filter help articles by public status', function () {
     expect(HelpArticle::where('is_public', false)->count())->toBe(3);
 });
 
+it('shows the article name as the view page title', function () {
+    $helpArticle = HelpArticle::factory()->create([
+        'name' => 'Adding an Evaluation Course',
+    ]);
+
+    $page = new \Tapp\FilamentHelp\Resources\HelpArticleResource\Pages\ViewHelpArticle;
+    $page->record = $helpArticle;
+
+    expect($page->getTitle())->toBe('Adding an Evaluation Course');
+    expect($page->getHeading())->toBe('Adding an Evaluation Course');
+});
+
 it('enables image uploads on the content rich editor', function () {
     expect(config('filament-help.editor.file_attachments.directory'))->toBe('help-articles');
     expect(config('filament-help.editor.file_attachments.visibility'))->toBe('public');

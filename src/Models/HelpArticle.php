@@ -3,8 +3,10 @@
 namespace Tapp\FilamentHelp\Models;
 
 use Filament\Facades\Filament;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\HtmlString;
 use Tapp\FilamentHelp\Support\Tenancy;
 
 class HelpArticle extends Model
@@ -106,5 +108,10 @@ class HelpArticle extends Model
     public function getRouteKeyName()
     {
         return 'slug';
+    }
+
+    public function renderContent(): Htmlable
+    {
+        return new HtmlString((string) str($this->content ?? '')->sanitizeHtml());
     }
 }

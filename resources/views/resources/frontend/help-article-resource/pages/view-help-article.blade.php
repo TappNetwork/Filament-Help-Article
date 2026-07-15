@@ -8,9 +8,7 @@
             @endif
             
             @if($this->record->content)
-                <div class="prose max-w-none dark:prose-invert prose-headings:text-gray-900 dark:prose-headings:text-white prose-video:aspect-video">
-                    {!! $this->record->content !!}
-                </div>
+                <x-filament-help::help-article-content :content="$this->record->content" />
             @else
                 <div class="text-center py-12">
                     <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
