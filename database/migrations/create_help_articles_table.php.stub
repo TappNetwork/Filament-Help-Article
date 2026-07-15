@@ -15,13 +15,34 @@ return new class extends Migration
 
             // Add tenant column if tenancy is enabled in config
             if (config('filament-help.tenancy.enabled', false)) {
-                $tenantColumn = config('filament-help.tenancy.column') ?? 'team_id';
-                $onDelete = config('filament-help.tenancy.foreign_key.on_delete', 'cascade');
-                $onUpdate = config('filament-help.tenancy.foreign_key.on_update', 'cascade');
+                $tenantModel = config('filament-help.tenancy.model');
 
-                $table->foreignId($tenantColumn)
+                throw_if(! is_string($tenantModel) || $tenantModel === '', InvalidArgumentException::class, 'Tenant model not configured in filament-help.tenancy.model');
+
+                $tenantColumnConfig = config('filament-help.tenancy.column');
+                $tenantColumn = is_string($tenantColumnConfig) && $tenantColumnConfig !== ''
+                    ? $tenantColumnConfig
+                    : str($tenantModel)->classBasename()->snake()->append('_id')->toString();
+
+                $onDelete = match (config('filament-help.tenancy.foreign_key.on_delete', 'cascade')) {
+                    'cascade' => 'cascade',
+                    'no action' => 'no action',
+                    'restrict' => 'restrict',
+                    'set null' => 'set null',
+                    default => 'cascade',
+                };
+
+                $onUpdate = match (config('filament-help.tenancy.foreign_key.on_update', 'cascade')) {
+                    'cascade' => 'cascade',
+                    'no action' => 'no action',
+                    'restrict' => 'restrict',
+                    'set null' => 'set null',
+                    default => 'cascade',
+                };
+
+                $table->foreignIdFor($tenantModel, $tenantColumn)
                     ->nullable()
-                    ->constrained('teams')
+                    ->constrained()
                     ->onDelete($onDelete)
                     ->onUpdate($onUpdate);
             }
