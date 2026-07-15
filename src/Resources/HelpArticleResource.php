@@ -102,11 +102,14 @@ class HelpArticleResource extends Resource
                         'h3',
                         'blockquote',
                         'codeBlock',
-                    ])
-                    ->columnSpanFull()
-                    ->disableToolbarButtons([
                         'attachFiles',
                     ])
+                    ->fileAttachmentsDisk(config('filament-help.editor.file_attachments.disk'))
+                    ->fileAttachmentsDirectory(config('filament-help.editor.file_attachments.directory', 'help-articles'))
+                    ->fileAttachmentsVisibility(config('filament-help.editor.file_attachments.visibility', 'public'))
+                    ->resizableImages()
+                    ->preventFileAttachmentPathTampering()
+                    ->columnSpanFull()
                     ->extraInputAttributes([
                         'style' => 'min-height: 200px;',
                     ]),
