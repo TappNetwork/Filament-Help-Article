@@ -30,3 +30,15 @@ it('casts is_public as boolean', function () {
     expect($helpArticle->is_public)->toBeTrue();
     expect($helpArticle->is_public)->toBeBool();
 });
+
+it('renders rich editor content as html', function () {
+    $helpArticle = HelpArticle::factory()->create([
+        'content' => '<p>First paragraph</p><p><img src="https://example.com/image.png" alt="Demo"></p>',
+    ]);
+
+    $html = $helpArticle->renderContent()->toHtml();
+
+    expect($html)->toContain('<p>First paragraph</p>');
+    expect($html)->toContain('src="https://example.com/image.png"');
+    expect($html)->toContain('alt="Demo"');
+});

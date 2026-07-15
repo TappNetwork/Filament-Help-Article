@@ -1,5 +1,7 @@
 <?php
 
+use Tapp\FilamentHelp\Models\HelpArticle;
+
 return [
 
     /*
@@ -15,7 +17,26 @@ return [
     |
     */
 
-    'model' => \Tapp\FilamentHelp\Models\HelpArticle::class,
+    'model' => HelpArticle::class,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Rich Editor Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Configure how images are stored when uploaded via the Content rich editor.
+    | By default, attachments are stored publicly so article HTML can be
+    | rendered without temporary URL generation.
+    |
+    */
+
+    'editor' => [
+        'file_attachments' => [
+            'disk' => env('FILAMENT_HELP_FILE_ATTACHMENTS_DISK'),
+            'directory' => env('FILAMENT_HELP_FILE_ATTACHMENTS_DIRECTORY', 'help-articles'),
+            'visibility' => env('FILAMENT_HELP_FILE_ATTACHMENTS_VISIBILITY', 'public'),
+        ],
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -101,4 +122,3 @@ return [
     ],
 
 ];
-

@@ -6,6 +6,7 @@ use Filament\Actions;
 use Filament\Actions\Action;
 use Filament\Facades\Filament;
 use Filament\Resources\Pages\ViewRecord;
+use Tapp\FilamentHelp\Models\HelpArticle;
 use Tapp\FilamentHelp\Resources\Frontend\HelpArticleResource as FrontendHelpArticleResource;
 use Tapp\FilamentHelp\Resources\Guest\HelpArticleResource as GuestHelpArticleResource;
 use Tapp\FilamentHelp\Resources\HelpArticleResource;
@@ -15,6 +16,16 @@ class ViewHelpArticle extends ViewRecord
     protected static string $resource = HelpArticleResource::class;
 
     protected string $view = 'filament-help::filament.resources.help-article-resource.pages.view-help-article';
+
+    public function getTitle(): string
+    {
+        return $this->record->name;
+    }
+
+    public function getHeading(): string
+    {
+        return $this->record->name;
+    }
 
     protected function getHeaderActions(): array
     {
@@ -39,7 +50,7 @@ class ViewHelpArticle extends ViewRecord
 
     protected function getShareUrl(): string
     {
-        /** @var \Tapp\FilamentHelp\Models\HelpArticle $record */
+        /** @var HelpArticle $record */
         $record = $this->record;
 
         if ($record->is_public) {
