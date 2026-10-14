@@ -26,7 +26,7 @@ it('can update help article slug when name changes', function () {
     $originalSlug = $helpArticle->slug;
 
     $helpArticle->update(['name' => 'Updated Name']);
-    
+
     expect($helpArticle->slug)->not->toBe($originalSlug);
     expect($helpArticle->slug)->toBe('updated-name');
 });
@@ -38,7 +38,7 @@ it('can view help article by slug', function () {
     ]);
 
     $foundArticle = HelpArticle::where('slug', 'test-article')->first();
-    
+
     expect($foundArticle)->not->toBeNull();
     expect($foundArticle->name)->toBe('Test Article');
 });

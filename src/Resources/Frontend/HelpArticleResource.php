@@ -103,7 +103,6 @@ class HelpArticleResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery()
-            ->public()
             ->visible();
 
         // Apply tenant scoping if enabled

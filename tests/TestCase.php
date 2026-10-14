@@ -2,11 +2,16 @@
 
 namespace Tapp\FilamentHelp\Tests;
 
+use Filament\Actions\ActionsServiceProvider;
+use Filament\Facades\Filament;
 use Filament\FilamentServiceProvider;
+use Filament\Panel;
+use Filament\Support\SupportServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Tapp\FilamentHelp\FilamentHelpServiceProvider;
+use Tapp\FilamentHelp\Resources\HelpArticleResource;
 
 class TestCase extends Orchestra
 {
@@ -24,8 +29,8 @@ class TestCase extends Orchestra
         return [
             LivewireServiceProvider::class,
             FilamentServiceProvider::class,
-            \Filament\Actions\ActionsServiceProvider::class,
-            \Filament\Support\SupportServiceProvider::class,
+            ActionsServiceProvider::class,
+            SupportServiceProvider::class,
             FilamentHelpServiceProvider::class,
         ];
     }
@@ -37,26 +42,38 @@ class TestCase extends Orchestra
 
         $migration = include __DIR__.'/../database/migrations/create_help_articles_table.php.stub';
         $migration->up();
-        
+
         $addIsHiddenMigration = include __DIR__.'/../database/migrations/add_is_hidden_to_help_articles_table.php.stub';
         $addIsHiddenMigration->up();
 
+        // Match an app that puts the signed-in help page on `help` and the guest page on `help-articles`.
+        \Tapp\FilamentHelp\Resources\Frontend\HelpArticleResource::setSlug('help');
+        \Tapp\FilamentHelp\Resources\Guest\HelpArticleResource::setSlug('help-articles');
+
         // Set up a basic Filament panel for testing (admin)
-        \Filament\Facades\Filament::registerPanel(
-            \Filament\Panel::make()
+        Filament::registerPanel(
+            Panel::make()
                 ->id('admin')
                 ->resources([
-                    \Tapp\FilamentHelp\Resources\HelpArticleResource::class,
+                    HelpArticleResource::class,
                 ])
         );
 
         // Register the frontend panel for testing (app)
-        \Filament\Facades\Filament::registerPanel(
-            \Filament\Panel::make()
+        Filament::registerPanel(
+            Panel::make()
                 ->id('app')
                 ->default() // Make 'app' the default panel for frontend tests
                 ->resources([
                     \Tapp\FilamentHelp\Resources\Frontend\HelpArticleResource::class,
+                ])
+        );
+
+        Filament::registerPanel(
+            Panel::make()
+                ->id('guest')
+                ->resources([
+                    \Tapp\FilamentHelp\Resources\Guest\HelpArticleResource::class,
                 ])
         );
     }

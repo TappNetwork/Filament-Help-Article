@@ -219,7 +219,7 @@ public function panel(Panel $panel): Panel
 
 **Location**: App panel (defaults to `{panel-path}/help-articles`, configurable via `->slug()`)  
 **Access**: Authenticated users only  
-**Features**: Read-only access to public help articles
+**Features**: Read-only access to help articles that are not hidden, including articles without public access
 
 ### Guest Plugin (for public access)
 
@@ -257,7 +257,7 @@ public function panel(Panel $panel): Panel
 Help articles are available in three different locations depending on your setup:
 
 1. **Admin Panel** (`/admin/help-articles`): For editing and managing help articles
-2. **App Panel** (configurable, default `{panel-path}/help-articles`): For authenticated users to view public help articles
+2. **App Panel** (configurable, default `{panel-path}/help-articles`): For authenticated users to view help articles that are not hidden
 3. **Guest Panel** (configurable, default `{panel-path}/help`): For public/guest users to view public help articles
 
 The frontend and guest panel URLs can be customized using the plugin's `->slug()` method when registering the plugin (see plugin documentation above).
@@ -265,7 +265,8 @@ The frontend and guest panel URLs can be customized using the plugin's `->slug()
 ## Features
 
 - **Admin Panel**: Full CRUD operations for help articles
-- **Frontend/Guest**: Read-only access to public help articles
+- **Frontend**: Read-only access for authenticated users, including articles that are not public
+- **Guest**: Read-only access to public help articles
 - **Rich Content**: HTML content support with iframe embedding
 - **Public/Private**: Control article visibility with `is_public` flag
 - **Hidden/Draft**: Hide articles from public view with `is_hidden` flag (useful for drafts or archived articles)
