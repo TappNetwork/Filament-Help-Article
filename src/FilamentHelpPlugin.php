@@ -4,6 +4,7 @@ namespace Tapp\FilamentHelp;
 
 use Filament\Contracts\Plugin;
 use Filament\Panel;
+use Tapp\FilamentHelp\Resources\HelpArticleResource;
 
 class FilamentHelpPlugin implements Plugin
 {
@@ -21,7 +22,7 @@ class FilamentHelpPlugin implements Plugin
     {
         $panel
             ->resources([
-                \Tapp\FilamentHelp\Resources\HelpArticleResource::class,
+                HelpArticleResource::class,
             ]);
     }
 

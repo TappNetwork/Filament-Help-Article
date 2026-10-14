@@ -54,20 +54,31 @@ class ViewHelpArticle extends ViewRecord
         $record = $this->record;
 
         if ($record->is_public) {
-            // Public link for unauthenticated users (guest panel)
-            $guestPanel = Filament::getPanel('guest');
-            if ($guestPanel) {
-                // Temporarily set the current panel to generate the correct URL
-                $originalPanel = Filament::getCurrentPanel();
-                Filament::setCurrentPanel($guestPanel);
-                $url = GuestHelpArticleResource::getUrl('view', ['record' => $record->slug]);
-                Filament::setCurrentPanel($originalPanel);
+            $guestPanelId = $this->panelIdForResource(GuestHelpArticleResource::class);
 
-                return $url;
+            if (filled($guestPanelId)) {
+                return GuestHelpArticleResource::getUrl('view', ['record' => $record->slug], panel: $guestPanelId);
             }
         }
 
-        // Authenticated frontend link (not admin)
-        return FrontendHelpArticleResource::getUrl('view', ['record' => $record->slug]);
+        return FrontendHelpArticleResource::getUrl(
+            'view',
+            ['record' => $record->slug],
+            panel: $this->panelIdForResource(FrontendHelpArticleResource::class),
+        );
+    }
+
+    /**
+     * @param  class-string  $resource
+     */
+    protected function panelIdForResource(string $resource): ?string
+    {
+        foreach (Filament::getPanels() as $panel) {
+            if (in_array($resource, $panel->getResources(), true)) {
+                return $panel->getId();
+            }
+        }
+
+        return null;
     }
 }

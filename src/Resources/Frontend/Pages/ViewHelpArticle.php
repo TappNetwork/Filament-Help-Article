@@ -13,12 +13,11 @@ class ViewHelpArticle extends ViewRecord
 
     protected string $view = 'filament-help::resources.frontend.help-article-resource.pages.view-help-article';
 
-    public function mount(int | string $record): void
+    public function mount(int|string $record): void
     {
         $this->record = $this->resolveRecord($record);
-        
-        // Ensure the article is public
-        if (! $this->record->is_public) {
+
+        if ($this->record->is_hidden) {
             abort(404);
         }
     }
@@ -35,7 +34,7 @@ class ViewHelpArticle extends ViewRecord
 
     public function getSubheading(): string
     {
-        return 'Last updated ' . $this->record->updated_at->format('M j, Y');
+        return 'Last updated '.$this->record->updated_at->format('M j, Y');
     }
 
     public function getBreadcrumbs(): array

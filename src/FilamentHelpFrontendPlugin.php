@@ -4,6 +4,7 @@ namespace Tapp\FilamentHelp;
 
 use Filament\Contracts\Plugin;
 use Filament\Panel;
+use Tapp\FilamentHelp\Resources\Frontend\HelpArticleResource;
 
 class FilamentHelpFrontendPlugin implements Plugin
 {
@@ -36,11 +37,11 @@ class FilamentHelpFrontendPlugin implements Plugin
             throw new \InvalidArgumentException('Slug cannot be empty. Please provide a non-empty slug when registering the plugin.');
         }
 
-        \Tapp\FilamentHelp\Resources\Frontend\HelpArticleResource::setSlug($slug);
+        HelpArticleResource::setSlug($slug);
 
         $panel
             ->resources([
-                \Tapp\FilamentHelp\Resources\Frontend\HelpArticleResource::class,
+                HelpArticleResource::class,
             ]);
     }
 

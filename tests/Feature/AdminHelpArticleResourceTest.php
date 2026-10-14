@@ -4,6 +4,7 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Schemas\Schema;
 use Tapp\FilamentHelp\Models\HelpArticle;
 use Tapp\FilamentHelp\Resources\HelpArticleResource;
+use Tapp\FilamentHelp\Resources\HelpArticleResource\Pages\ViewHelpArticle;
 
 it('can create help article through factory', function () {
     $helpArticle = HelpArticle::factory()->create([
@@ -49,7 +50,7 @@ it('shows the article name as the view page title', function () {
         'name' => 'Adding an Evaluation Course',
     ]);
 
-    $page = new \Tapp\FilamentHelp\Resources\HelpArticleResource\Pages\ViewHelpArticle;
+    $page = new ViewHelpArticle;
     $page->record = $helpArticle;
 
     expect($page->getTitle())->toBe('Adding an Evaluation Course');
